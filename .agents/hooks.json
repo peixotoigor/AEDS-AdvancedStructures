@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "PreToolUse": [
+    {
+      "matcher": "run_command",
+      "handler": {
+        "type": "command",
+        "command": "echo 'Verificando segurança do comando antes de executar...'",
+        "timeout": 10
+      }
+    }
+  ]
+}
