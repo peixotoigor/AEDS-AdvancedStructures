@@ -8,7 +8,7 @@ description: Cria uma nova funcionalidade completa seguindo Clean Architecture, 
 Esta skill orienta a implementação estruturada de uma nova funcionalidade.
 
 ## Diretrizes Mandatórias
-1. **Consulte o repositório:** Leia `PROJECT_CONFIG.md` e confirme no código, testes e configurações versionadas os padrões ativos antes de implementar.
+1. **Consulte o repositório:** Confirme no código, testes e configurações versionadas os padrões ativos antes de implementar.
 2. **Ciclo de Desenvolvimento (Clean Architecture):**
    - **Camada 1 - Domínio (`src/domain/`):** Crie a entidade ou value object com validação de invariantes.
    - **Camada 2 - Aplicação (`src/application/`):** Defina a interface de repositório (Port), crie DTOs, teste unitário (Vitest AAA) e implemente o Use Case.
