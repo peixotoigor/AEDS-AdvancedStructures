@@ -6,6 +6,9 @@
     "allowList": [
       "g++",
       "clang++",
+      "cmake",
+      "ctest",
+      "pdflatex",
       "make",
       "wsl",
       "git status",

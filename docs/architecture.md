@@ -59,6 +59,23 @@ destruir_heap(&heap);
 
 Os nomes das funções podem ser ajustados à implementação final.
 
+## Contratos e ownership
+
+Antes da implementação, a API deve definir explicitamente:
+
+- o comportamento de consulta e extração em heap vazio;
+- a rejeição de `decrease-key` para uma chave maior;
+- o tratamento de ponteiros nulos;
+- como um nó é identificado para diminuir chave ou remover;
+- se a extração retorna uma chave ou um nó;
+- quem libera qualquer nó retornado;
+- o comportamento para um nó que não pertence ao heap.
+
+Para reduzir risco de `double-free`, a implementação deve preferir liberar
+internamente nós removidos e retornar apenas a informação necessária ao
+chamador. Se a API final escolher retornar um ponteiro, o ownership e a
+responsabilidade por `delete` devem ser documentados e testados explicitamente.
+
 ## Operações e complexidades amortizadas
 
 | Operação | Complexidade amortizada |

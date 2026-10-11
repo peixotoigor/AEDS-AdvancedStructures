@@ -14,8 +14,9 @@ Projeto acadêmico para estudo, implementação e análise de um Fibonacci Heap.
 
 ```text
 src/
-  core/       Arquivos `.cpp` e ponto de entrada dos testes
+  core/       Arquivos `.cpp` e demonstrações pequenas
   include/    Arquivos `.hpp` e interfaces públicas
+tests/        Testes funcionais e invariantes
 benchmarks/   Medições de desempenho
 docs/         Requisitos, arquitetura, estilo, desenvolvimento e validação
 results/      Tabelas, dados e gráficos gerados
@@ -27,7 +28,8 @@ organização e validação.
 ## Requisitos
 
 - Compilador compatível com o padrão adotado pelo projeto.
-- Ferramentas de build definidas pelos arquivos do repositório.
+- CMake ou os comandos manuais definidos em
+  [`docs/development.md`](docs/development.md), quando o build for criado.
 - Ferramentas adicionais somente quando descritas na documentação ou no
   código.
 
@@ -43,4 +45,5 @@ Antes de contribuir:
 
 ## Estado do projeto
 
-Em desenvolvimento.
+Configuração documental concluída. A implementação, os testes, os benchmarks
+e o relatório ainda serão criados nas etapas seguintes.

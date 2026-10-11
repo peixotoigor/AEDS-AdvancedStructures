@@ -1,19 +1,26 @@
 ---
 name: security-review
-description: "Auditoria e revisão minuciosa de segurança contra vulnerabilidades OWASP, injeção e vazamento de credenciais"
-invocation: agent_or_user
+description: "Auditoria de segurança de memória em C++ para Fibonacci Heap, incluindo use-after-free, double-free, vazamentos e corrupção de ponteiros"
 ---
 
-# Skill: Revisão de Segurança (Security Review)
+# Auditoria de segurança de memória
 
-## Quando Utilizar
-Carregue esta skill sempre que estiver alterando lógicas de autenticação, permissões, queries de banco de dados, upload de arquivos ou manipulação de headers.
+## Quando utilizar
 
-## Procedimento de Execução
-1. **Inspeção de Diffs:** Analise as alterações comparando com a checklist de segurança anexada.
-2. **Carregamento de Recursos:** Leia detalhadamente o arquivo `.agents/skills/security-review/checklist.md`.
-3. **Verificação de Vulnerabilidades:**
-   - Verifique ausência de segredos ou chaves privadas (.env commitado).
-   - Verifique sanitização de inputs contra XSS e SQL Injection.
-   - Verifique controle de acesso baseado em papéis (RBAC).
-4. **Relatório:** Produza um artefato estruturado listando vulnerabilidades encontradas, nível de severidade (Baixo, Médio, Alto, Crítico) e plano de mitigação.
+Use ao alterar operações que removem nós, consolidam árvores, cortam listas,
+destroem o heap ou manipulam ownership manual.
+
+## Procedimento
+
+1. Leia `AGENTS.md`, `docs/architecture.md` e
+   `.agents/skills/security-review/checklist.md`.
+2. Inspecione o diff e os caminhos afetados.
+3. Procure `use-after-free`, `double-free`, vazamentos, ponteiros pendentes,
+   acesso nulo inesperado, corrupção de `esquerda`/`direita` e ciclos sem
+   término.
+4. Verifique que cada nó é liberado exatamente uma vez e que a destruição
+   alcança raízes, filhos e listas circulares.
+5. Execute testes e sanitizers disponíveis; preserve a saída real.
+6. Relate severidade, arquivo, linha, evidência, impacto e correção sugerida.
+
+Não introduza correções durante uma auditoria somente de revisão.

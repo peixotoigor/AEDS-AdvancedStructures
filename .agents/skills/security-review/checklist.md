@@ -1,8 +1,12 @@
-# Checklist de Auditoria de Segurança
+# Checklist de Segurança de Memória
 
-- [ ] Nenhuma chave de API, token JWT secreto ou senha exposta no código-fonte.
-- [ ] Todas as consultas SQL ou ORM utilizam binding de parâmetros.
-- [ ] Endpoints protegidos exigem verificação do token JWT no middleware.
-- [ ] Limitação de taxa (Rate Limiting) aplicada a rotas públicas e autenticação.
-- [ ] Sanitização e validação de MIME type em upload de arquivos.
-- [ ] Headers de segurança presentes (Content-Security-Policy, X-Frame-Options, HSTS).
+- [ ] Ponteiros são validados antes de acesso quando a API permitir entrada nula.
+- [ ] `esquerda` e `direita` permanecem recíprocos após cada mutação.
+- [ ] Um nó removido é desconectado antes de ser liberado.
+- [ ] Nenhum ponteiro é acessado depois de `delete`.
+- [ ] Cada nó é liberado exatamente uma vez.
+- [ ] A destruição percorre raízes, filhos e listas circulares sem duplicar nós.
+- [ ] Não há `use-after-free`, `double-free` ou vazamento observável.
+- [ ] A contagem de nós e o ponteiro `minimo` são atualizados após remoções.
+- [ ] Loops de listas circulares possuem condição de término verificável.
+- [ ] Testes executam com AddressSanitizer e UndefinedBehaviorSanitizer quando disponíveis.

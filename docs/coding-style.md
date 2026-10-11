@@ -26,7 +26,9 @@ src/
 - `src/include/fibonacci_heap.hpp` deve conter os registros, declarações e
   contratos públicos.
 - `src/core/fibonacci_heap.cpp` deve conter a implementação das operações.
-- `src/core/main.cpp` deve conter asserções, exemplos pequenos e testes locais.
+- `src/core/main.cpp` deve conter somente demonstrações pequenas e exemplos de
+  uso.
+- `tests/` deve conter os testes funcionais e as verificações de invariantes.
 
 Todo arquivo `.cpp` deve ficar em `src/core/`. Todo arquivo `.hpp` deve ficar
 em `src/include/`.

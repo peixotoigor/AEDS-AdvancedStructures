@@ -37,6 +37,12 @@ coverage/
 *.gcno
 *.gcov
 
+# Saídas intermediárias do LaTeX
+*.aux
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
 # Python
 __pycache__/
 *.py[cod]
