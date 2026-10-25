@@ -82,8 +82,25 @@ HeapFibonacci::~HeapFibonacci(){
 
 }
 
-NoFibonacci* HeapFibonacci::insert(int chave, int valor){}
-NoFibonacci* HeapFibonacci::minimum() const {}
+NoFibonacci* HeapFibonacci::insert(int chave, int valor){
+    NoFibonacci* novo_no = new NoFibonacci(chave, valor);
+    inserir_no_lista_circular(this->min, novo_no);
+    if(novo_no->chave < this->min->chave){
+        this->min = novo_no;
+    }
+    this->n++;
+    return novo_no;
+
+}
+
+NoFibonacci* HeapFibonacci::minimum() const {
+    if (this->min == nullptr){ // Não é obrigatório essa parte, porém
+        return nullptr;        // ficará mais fácil de explicar com essa verificação.
+    }                          // Se tivesse ou não, daria o mesmo resultado.
+    return this->min;
+}
+
+
 NoFibonacci* HeapFibonacci::extract_min(){}
 void HeapFibonacci::union_heaps(HeapFibonacci& H2){}
 void HeapFibonacci::decrease_key(NoFibonacci* x, int chave_nova){}
