@@ -28,13 +28,13 @@ class HeapFibonacci {
         NoFibonacci* min;
 
         // métodos auxiliares para manipular a lista circular
-        void inserir_no_lista_circular(NoFibonacci* x);
+        void inserir_no_lista_circular(NoFibonacci*& referencia, NoFibonacci* x); 
         void deletar_no_lista_circular(NoFibonacci* x);
-        void juntar_listas_circulares(NoFibonacci* H1, NoFibonacci* H2);
+        void juntar_listas_circulares(NoFibonacci& H1, NoFibonacci& H2);
         void liberar_memoria(NoFibonacci *no);
 
         // métodos auxiliares das funções do heap
-        void consolidate();
+        void consolidate(); 
         void cut(NoFibonacci* x, NoFibonacci* y);
         void cascading_cut(NoFibonacci* y);
         void heap_link(NoFibonacci* y, NoFibonacci* x);
