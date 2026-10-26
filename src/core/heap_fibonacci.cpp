@@ -36,8 +36,6 @@ void HeapFibonacci::deletar_no_lista_circular(NoFibonacci* x){
 }
 
 void HeapFibonacci::juntar_listas_circulares(NoFibonacci* H1, NoFibonacci* H2){
-    
- 
     NoFibonacci* temp = H1 -> esquerda;
     NoFibonacci* temp2 = H2 -> esquerda;
 
@@ -49,7 +47,7 @@ void HeapFibonacci::juntar_listas_circulares(NoFibonacci* H1, NoFibonacci* H2){
 
 }
 
-void HeapFibonacci::liberar_memoria(NoFibonacci *no){
+void HeapFibonacci::liberar_memoria(NoFibonacci* no){
     if(no == nullptr){
         return;
     }
@@ -123,7 +121,6 @@ void HeapFibonacci::consolidate(){
 }
 
 void HeapFibonacci::cut(NoFibonacci* x, NoFibonacci* y){
-
     if(x->direita == x){
         y->filho = nullptr;
     }else{
@@ -144,7 +141,6 @@ void HeapFibonacci::cut(NoFibonacci* x, NoFibonacci* y){
 }
 
 void HeapFibonacci::cascading_cut(NoFibonacci* y){
- 
     NoFibonacci* z = y->pai;
 
     if(z != nullptr){
@@ -172,7 +168,7 @@ void HeapFibonacci::heap_link(NoFibonacci* y, NoFibonacci* x){
 }
 
 // métodos públicos -----------------------------------------------------------------------------------
-HeapFibonacci::HeapFibonacci(){}
+HeapFibonacci::HeapFibonacci(): n(0), min(nullptr) {}
 
 HeapFibonacci::~HeapFibonacci(){
     if(this->min == nullptr){
@@ -189,6 +185,10 @@ HeapFibonacci::~HeapFibonacci(){
         atual = proximo;
     }
 
+}
+
+int HeapFibonacci::tamanho_heap() const {
+    return this->n;
 }
 
 NoFibonacci* HeapFibonacci::extract_min(){
@@ -229,6 +229,7 @@ NoFibonacci* HeapFibonacci::extract_min(){
 
 NoFibonacci* HeapFibonacci::insert(int chave, int valor){
     NoFibonacci* novo_no = new NoFibonacci(chave, valor);
+
     inserir_no_lista_circular(this->min, novo_no);
     if(novo_no->chave < this->min->chave){
         this->min = novo_no;
@@ -239,9 +240,9 @@ NoFibonacci* HeapFibonacci::insert(int chave, int valor){
 }
 
 NoFibonacci* HeapFibonacci::minimum() const {
-    if (this->min == nullptr){ // Não é obrigatório essa parte, porém
-        return nullptr;        // ficará mais fácil de explicar com essa verificação.
-    }                          // Se tivesse ou não, daria o mesmo resultado.
+    if (this->min == nullptr){ 
+        return nullptr;        
+    }                          
     return this->min;
 }
 
@@ -255,7 +256,6 @@ bool HeapFibonacci::esta_vazio() const {
 
 // Cria um novo heap que reúne os elementos de H1 e H2.
 HeapFibonacci* HeapFibonacci::union_heaps(HeapFibonacci& H1,HeapFibonacci& H2){
-
     HeapFibonacci *H = new HeapFibonacci();
 
     if(H1.esta_vazio() && H2.esta_vazio()){
@@ -303,7 +303,6 @@ HeapFibonacci* HeapFibonacci::union_heaps(HeapFibonacci& H1,HeapFibonacci& H2){
 }
 
 void HeapFibonacci::decrease_key(NoFibonacci* x, int chave_nova){
-
     if(x == nullptr){
         return;
     }
@@ -324,9 +323,16 @@ void HeapFibonacci::decrease_key(NoFibonacci* x, int chave_nova){
 
     }
 }
-NoFibonacci* HeapFibonacci::delete_no(NoFibonacci* x){}
 
-int HeapFibonacci::tamanho_heap() const {
-    return this->n;
+NoFibonacci* HeapFibonacci::delete_no(NoFibonacci* x){
+    if(this->min == nullptr|| x == nullptr){
+        return nullptr;
+    }
+
+    decrease_key(x, INT_MIN);
+    NoFibonacci* z = extract_min();
+    return z;
 }
+
+
 
