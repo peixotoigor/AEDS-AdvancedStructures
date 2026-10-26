@@ -35,7 +35,19 @@ void HeapFibonacci::deletar_no_lista_circular(NoFibonacci* x){
     x->esquerda = x;
 }
 
-void HeapFibonacci::juntar_listas_circulares(NoFibonacci& H1, NoFibonacci& H2){}
+void HeapFibonacci::juntar_listas_circulares(NoFibonacci* H1, NoFibonacci* H2){
+    
+ 
+    NoFibonacci* temp = H1 -> esquerda;
+    NoFibonacci* temp2 = H2 -> esquerda;
+
+    temp -> direita = H2;
+    H2 -> esquerda = temp;
+
+    temp2 -> direita = H1;
+    H1 -> esquerda = temp2;
+
+}
 
 void HeapFibonacci::liberar_memoria(NoFibonacci *no){
     if(no == nullptr){
@@ -110,8 +122,42 @@ void HeapFibonacci::consolidate(){
     }
 }
 
-void HeapFibonacci::cut(NoFibonacci* x, NoFibonacci* y){}
-void HeapFibonacci::cascading_cut(NoFibonacci* y){}
+void HeapFibonacci::cut(NoFibonacci* x, NoFibonacci* y){
+
+    if(x->direita == x){
+        y->filho = nullptr;
+    }else{
+        
+        x -> direita -> esquerda = x -> esquerda;
+        x -> esquerda -> direita = x -> direita;
+
+        if(y->filho == x){
+            y->filho = x->direita;
+        }
+    }
+
+    y->grau = y->grau - 1;
+    inserir_no_lista_circular(this->min, x);
+
+    x->pai = nullptr;
+    x->marca = false;
+}
+
+void HeapFibonacci::cascading_cut(NoFibonacci* y){
+ 
+    NoFibonacci* z = y->pai;
+
+    if(z != nullptr){
+       if(y-> marca == false){
+
+          y-> marca = true;
+
+       }else{
+          cut(y,z);
+          cascading_cut(z);
+       }
+    }
+}
 
 void HeapFibonacci::heap_link(NoFibonacci* y, NoFibonacci* x){
     if(x == nullptr || y == nullptr){
@@ -199,14 +245,6 @@ NoFibonacci* HeapFibonacci::minimum() const {
     return this->min;
 }
 
-void HeapFibonacci::union_heaps(HeapFibonacci& H2){}
-void HeapFibonacci::decrease_key(NoFibonacci* x, int chave_nova){}
-NoFibonacci* HeapFibonacci::delete_no(NoFibonacci* x){}
-
-int HeapFibonacci::tamanho_heap() const {
-    return this->n;
-}
-
 bool HeapFibonacci::esta_vazio() const {
     if(this->min == nullptr){
         return true;
@@ -214,3 +252,81 @@ bool HeapFibonacci::esta_vazio() const {
 
     return false;
 }
+
+// Cria um novo heap que reúne os elementos de H1 e H2.
+HeapFibonacci* HeapFibonacci::union_heaps(HeapFibonacci& H1,HeapFibonacci& H2){
+
+    HeapFibonacci *H = new HeapFibonacci();
+
+    if(H1.esta_vazio() && H2.esta_vazio()){
+        return H;
+    }
+    // Se H1 estiver vazio, transfere os elementos de H2 para H.
+    if(H1.esta_vazio()){
+
+        H->min = H2.min;
+        H->n = H2.n;
+
+        H2.min = nullptr;
+        H2.n = 0;
+
+        return H;
+    }
+    // Se H2 estiver vazio, transfere os elementos de H1 para H.
+    if(H2.esta_vazio()){
+            
+        H->min = H1.min;
+        H->n = H1.n;
+
+        H1.min = nullptr;
+        H1.n = 0;
+
+        return H;
+
+    }
+    juntar_listas_circulares(H1.min, H2.min);
+
+    if(H1.min -> chave < H2.min -> chave){
+        H -> min = H1.min;
+    }else{   
+        H -> min = H2.min;
+    }           
+    H->n = H1.n + H2.n;
+
+    H1.min = nullptr;
+    H1.n = 0;
+
+    H2.min = nullptr;
+    H2.n = 0;
+    return H;
+
+}
+
+void HeapFibonacci::decrease_key(NoFibonacci* x, int chave_nova){
+
+    if(x == nullptr){
+        return;
+    }
+    if(chave_nova > x->chave){
+        return;
+    }
+    
+    x->chave = chave_nova;
+    NoFibonacci* y = x->pai;
+    
+    if(y != nullptr && x->chave < y->chave){
+        cut(x,y);
+        cascading_cut(y);
+
+    }
+    if(this->min == nullptr || x->chave < this->min->chave){
+        this->min = x;
+
+    }
+}
+NoFibonacci* HeapFibonacci::delete_no(NoFibonacci* x){}
+
+int HeapFibonacci::tamanho_heap() const {
+    return this->n;
+}
+
