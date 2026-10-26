@@ -35,7 +35,7 @@ void HeapFibonacci::deletar_no_lista_circular(NoFibonacci* x){
     x->esquerda = x;
 }
 
-void HeapFibonacci::juntar_listas_circulares(NoFibonacci& H1, NoFibonacci& H2);{}
+void HeapFibonacci::juntar_listas_circulares(NoFibonacci& H1, NoFibonacci& H2){}
 
 void HeapFibonacci::liberar_memoria(NoFibonacci *no){
     if(no == nullptr){
@@ -57,10 +57,73 @@ void HeapFibonacci::liberar_memoria(NoFibonacci *no){
     delete no;
 }
 
-void HeapFibonacci::consolidate(){}
+void HeapFibonacci::consolidate(){
+    int grauMaximo = static_cast<int>(floor(log2(this->n) / log2(1.61803398875)) + 2);
+    vector<NoFibonacci*> auxiliarRaizes(grauMaximo);
+
+    for(int i=0;i<grauMaximo;i++){
+        auxiliarRaizes[i] = nullptr;
+    }
+
+    vector<NoFibonacci*> listaRaizes;
+    NoFibonacci* proximo = this->min;
+    if(proximo != nullptr){
+        do {
+            listaRaizes.push_back(proximo);
+            proximo = proximo->direita;
+        } while(proximo != this->min);
+    } 
+
+    for(size_t i=0;i < listaRaizes.size();i++){
+        NoFibonacci* x = listaRaizes[i];
+        int d = x->grau;
+
+        while(d < grauMaximo && auxiliarRaizes[d] != nullptr){
+            NoFibonacci* y = auxiliarRaizes[d];
+            if(x->chave > y->chave){
+                swap(x,y);
+            }
+
+            heap_link(y, x);
+            auxiliarRaizes[d] = nullptr;
+            d++;
+        }
+
+        auxiliarRaizes[d] = x;
+    }
+
+    this->min = nullptr;
+    for(int i=0;i<grauMaximo;i++){
+        if(auxiliarRaizes[i] != nullptr){
+            auxiliarRaizes[i]->direita = auxiliarRaizes[i];
+            auxiliarRaizes[i]->esquerda = auxiliarRaizes[i];
+            if(this->min == nullptr){
+                inserir_no_lista_circular(this->min, auxiliarRaizes[i]);
+                this->min = auxiliarRaizes[i];
+            } else {
+                inserir_no_lista_circular(this->min, auxiliarRaizes[i]);
+                if(auxiliarRaizes[i]->chave < this->min->chave){
+                    this->min = auxiliarRaizes[i];
+                } 
+            }
+        }
+    }
+}
+
 void HeapFibonacci::cut(NoFibonacci* x, NoFibonacci* y){}
 void HeapFibonacci::cascading_cut(NoFibonacci* y){}
-void HeapFibonacci::heap_link(NoFibonacci* y, NoFibonacci* x){}
+
+void HeapFibonacci::heap_link(NoFibonacci* y, NoFibonacci* x){
+    if(x == nullptr || y == nullptr){
+        return;
+    }
+
+    deletar_no_lista_circular(y);
+    inserir_no_lista_circular(x->filho, y);
+    x->grau += 1;
+    y->marca = false;
+    y->pai = x;
+}
 
 // métodos públicos -----------------------------------------------------------------------------------
 HeapFibonacci::HeapFibonacci(){}
@@ -84,7 +147,43 @@ HeapFibonacci::~HeapFibonacci(){
 
 NoFibonacci* HeapFibonacci::insert(int chave, int valor){}
 NoFibonacci* HeapFibonacci::minimum() const {}
-NoFibonacci* HeapFibonacci::extract_min(){}
+
+NoFibonacci* HeapFibonacci::extract_min(){
+    NoFibonacci* z = this->min;
+
+    if(z != nullptr){
+        vector<NoFibonacci*> auxiliarFilhos;
+        if(z->filho != nullptr){
+            NoFibonacci* proximo = z->filho;
+            
+            do {
+                auxiliarFilhos.push_back(proximo);
+                proximo = proximo->direita;
+            } while(proximo != z->filho);
+        }
+
+        for(size_t i=0;i<auxiliarFilhos.size();i++){
+            auxiliarFilhos[i]-> direita = auxiliarFilhos[i];
+            auxiliarFilhos[i]->esquerda = auxiliarFilhos[i];
+            inserir_no_lista_circular(this->min, auxiliarFilhos[i]);
+            auxiliarFilhos[i]->pai = nullptr;
+        }
+
+        NoFibonacci* proxZ = z->direita;
+        deletar_no_lista_circular(z);
+        if(z == proxZ){
+            this->min = nullptr;
+        } else {
+            this->min = proxZ;
+            consolidate();
+        }
+
+        this->n -= 1;
+    }
+
+    return z;
+}
+
 void HeapFibonacci::union_heaps(HeapFibonacci& H2){}
 void HeapFibonacci::decrease_key(NoFibonacci* x, int chave_nova){}
 NoFibonacci* HeapFibonacci::delete_no(NoFibonacci* x){}

@@ -2,6 +2,8 @@
 #define HEAP_FIBONACCI_HPP
 
 #include <climits>
+#include <vector>
+#include <cmath>
 
 class HeapFibonacci {
     public:
