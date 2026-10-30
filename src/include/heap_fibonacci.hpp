@@ -49,7 +49,7 @@ class HeapFibonacci {
         NoFibonacci* insert(int chave, int valor);
         NoFibonacci* minimum() const;
         NoFibonacci* extract_min();
-        NoFibonacci* union_heaps(HeapFibonacci& H1, HeapFibonacci& H2);
+        HeapFibonacci* union_heaps(HeapFibonacci& H1, HeapFibonacci& H2);
         void decrease_key(NoFibonacci* x, int chave_nova);
         NoFibonacci* delete_no(NoFibonacci* x);
         int tamanho_heap() const;

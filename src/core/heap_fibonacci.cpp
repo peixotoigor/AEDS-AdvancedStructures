@@ -1,4 +1,5 @@
 #include "heap_fibonacci.hpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -68,7 +69,18 @@ void HeapFibonacci::liberar_memoria(NoFibonacci* no){
 }
 
 void HeapFibonacci::consolidate(){
+
+    if(this->n <= 0){
+
+        return;
+    }
     int grauMaximo = static_cast<int>(floor(log2(this->n) / log2(1.61803398875)) + 2);
+
+    if(grauMaximo < 1){
+
+        grauMaximo = 1;
+    }
+
     vector<NoFibonacci*> auxiliarRaizes(grauMaximo);
 
     for(int i=0;i<grauMaximo;i++){
@@ -98,6 +110,9 @@ void HeapFibonacci::consolidate(){
             auxiliarRaizes[d] = nullptr;
             d++;
         }
+    while(d >= static_cast<int>(auxiliarRaizes.size())){
+        auxiliarRaizes.push_back(nullptr);
+    }
 
         auxiliarRaizes[d] = x;
     }
@@ -133,7 +148,9 @@ void HeapFibonacci::cut(NoFibonacci* x, NoFibonacci* y){
         }
     }
 
-    y->grau = y->grau - 1;
+    y->grau -= 1;
+    x->direita = x;
+    x->esquerda = x;
     inserir_no_lista_circular(this->min, x);
 
     x->pai = nullptr;
@@ -191,7 +208,7 @@ int HeapFibonacci::tamanho_heap() const {
     return this->n;
 }
 
-NoFibonacci* HeapFibonacci::extract_min(){
+HeapFibonacci::NoFibonacci* HeapFibonacci::extract_min(){
     NoFibonacci* z = this->min;
 
     if(z != nullptr){
@@ -212,6 +229,9 @@ NoFibonacci* HeapFibonacci::extract_min(){
             auxiliarFilhos[i]->pai = nullptr;
         }
 
+        z->filho = nullptr;
+        z->grau = 0;
+
         NoFibonacci* proxZ = z->direita;
         deletar_no_lista_circular(z);
         if(z == proxZ){
@@ -227,7 +247,7 @@ NoFibonacci* HeapFibonacci::extract_min(){
     return z;
 }
 
-NoFibonacci* HeapFibonacci::insert(int chave, int valor){
+HeapFibonacci::NoFibonacci* HeapFibonacci::insert(int chave, int valor){
     NoFibonacci* novo_no = new NoFibonacci(chave, valor);
 
     inserir_no_lista_circular(this->min, novo_no);
@@ -239,7 +259,7 @@ NoFibonacci* HeapFibonacci::insert(int chave, int valor){
 
 }
 
-NoFibonacci* HeapFibonacci::minimum() const {
+HeapFibonacci::NoFibonacci* HeapFibonacci::minimum() const {
     if (this->min == nullptr){ 
         return nullptr;        
     }                          
@@ -324,7 +344,7 @@ void HeapFibonacci::decrease_key(NoFibonacci* x, int chave_nova){
     }
 }
 
-NoFibonacci* HeapFibonacci::delete_no(NoFibonacci* x){
+HeapFibonacci::NoFibonacci* HeapFibonacci::delete_no(HeapFibonacci::NoFibonacci* x){
     if(this->min == nullptr|| x == nullptr){
         return nullptr;
     }
