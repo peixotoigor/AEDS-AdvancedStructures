@@ -19,4 +19,7 @@ a.out
 __pycache__/
 venv/
 .venv/
+testar_binario
+testar_binario_dados
+testar_leitor
 
