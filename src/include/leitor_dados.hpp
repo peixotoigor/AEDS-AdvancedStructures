@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
+#include "dijkstra.hpp"
 using namespace std;
 
 const int LIMITE_MAXIMO = 1000000;
@@ -52,6 +53,32 @@ inline vector<ParDecreaseKey> lerDecreaseKey(int n, string caminho_arquivo){
         }
     }
     return pares;
+}
+
+// Leitura de Grafos para o Dijkstra (.dat no formato: V E / u v w)
+inline Grafo lerGrafoArquivo(const string& caminho_arquivo){
+    ifstream ler(caminho_arquivo);
+    if(!ler){
+        throw runtime_error("Erro ao abrir o arquivo de grafo: " + caminho_arquivo);
+    }
+
+    int num_vertices;
+    long long num_arestas;
+
+    if(!(ler >> num_vertices >> num_arestas)){
+        throw runtime_error("Erro ao ler cabecalho (V e E) do arquivo: " + caminho_arquivo);
+    }
+
+    Grafo g(num_vertices);
+    for(long long i = 0; i < num_arestas; i++){
+        int u, v, peso;
+        if(!(ler >> u >> v >> peso)){
+            throw runtime_error("Erro ao ler aresta " + to_string(i) + " no arquivo: " + caminho_arquivo);
+        }
+        g.adicionar_aresta(u, v, peso, true); // true = direcionado
+    }
+
+    return g;
 }
 
 #endif
