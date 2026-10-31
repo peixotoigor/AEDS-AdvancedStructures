@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laboratório de heaps: binário, d-ário e Fibonacci</title>
+<style>
+:root{--bg:#E6F1FC;--ink:#12304F;--mu:#4C6988;--ln:#AFC8E2;--hot:#E0561A;--sh:#FFE8CC}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#EDF6FF,#DCEAF9) fixed;color:var(--ink);font:14px/1.45 "Segoe UI",system-ui,sans-serif}
+#app{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:100vh}
+#side{background:linear-gradient(180deg,#CFE1F4,#BBD3EC);padding:18px 16px 24px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:15px;box-shadow:3px 0 18px rgba(18,48,79,.14)}
+h1{margin:0;font:700 25px/1.1 Palatino,"Palatino Linotype",Georgia,serif}.sub{margin:3px 0 0;color:var(--mu);font-size:12.5px}
+.sec{display:grid;gap:7px}.sec>h2{margin:0;font:700 13px "Segoe UI",system-ui;color:var(--mu)}
+.row{display:flex;gap:6px;align-items:center}.row>*{min-width:0}
+input{flex:1 1 80px;width:100%;border:1.5px solid transparent;border-radius:8px;padding:7px 9px;background:#fff;color:var(--ink);box-shadow:inset 0 1px 2px rgba(18,48,79,.12);transition:border-color .15s}
+input:focus{outline:none;border-color:var(--hot)}input[type=range]{padding:0;box-shadow:none;accent-color:var(--hot)}input[type=checkbox]{width:auto;flex:none;accent-color:var(--hot)}
+button{--c:#5B7391;flex:1 1 auto;border:0;border-radius:9px;padding:8px 12px;font:600 13px "Segoe UI",system-ui;color:#fff;background:var(--c);cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.2);transition:transform .12s,box-shadow .12s,filter .12s}
+button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 14px rgba(18,48,79,.3);filter:brightness(1.1)}
+button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+button:disabled{opacity:.45;cursor:default}button:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.gr{--c:#2E9E5B}.rd{--c:#D64545}.or{--c:#F08A24}.bl{--c:#3478C6}.vi{--c:#7B5CC4}.pc{--c:#12304F;padding:11px}
+#tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px}#tabs button:last-child{grid-column:1/-1}
+#tabs button{background:#fff;color:var(--ink);border-left:6px solid var(--c);text-align:left;box-shadow:0 2px 0 rgba(0,0,0,.12)}#tabs button.on{background:var(--c);color:#fff}
+#sel{color:var(--hot);font-weight:600;min-height:20px}label{display:flex;gap:6px;align-items:center;font-size:13px}
+#mainw{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;padding:20px 28px;align-items:start}body.psOn #mainw{grid-template-columns:minmax(0,1fr) 380px}
+#msg{min-height:20px;color:var(--hot);font-weight:600;margin-bottom:6px}
+#stage{display:grid;gap:34px}#stage.grid{grid-template-columns:1fr 1fr}.pn{min-width:0}
+h3{margin:0 0 6px;display:flex;align-items:center;gap:9px;font:700 21px Palatino,Georgia,serif;color:var(--c);cursor:pointer}h3 small{font:13px "Segoe UI";color:var(--mu)}
+h3::after{content:"";flex:1;height:3px;border-radius:2px;background:var(--c);opacity:.22}.pn.foc h3::after{opacity:.85}
+.pn svg{display:block;margin:0 auto}.nd{cursor:pointer}.nd circle{filter:drop-shadow(0 2px 3px rgba(18,48,79,.28))}.nd:hover circle{stroke-width:3.2}
+.nd text{font:600 12px system-ui;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.dg{font:9px system-ui;fill:#4C6988}.gl{font:700 12px system-ui;fill:#4C6988}.ed{stroke-width:1.6}.rl{stroke:#8FA8C2;stroke-dasharray:4 4}.sl{fill:none;stroke:var(--hot);stroke-dasharray:3 3}
+.em{color:var(--mu);padding:24px 0;text-align:center}
+.st{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;margin:10px 0}.st i{font:12px ui-monospace,Consolas,monospace;font-style:normal;min-width:26px;text-align:center;background:#fff;border:1.5px solid var(--c);border-radius:5px;padding:2px 4px}.st i.on{background:var(--sh);border-color:var(--hot)}
+.mt{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin:8px 0;color:var(--mu);font-size:13px}.mt b{color:var(--c);font:700 20px Palatino,Georgia,serif;margin-right:3px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}td,th{border-bottom:1px solid var(--ln);padding:3px 6px;text-align:right}td:first-child,th:first-child{text-align:left}th{color:var(--mu);font-weight:600}
+.fx{margin-top:12px;padding-top:8px;border-top:2px dashed var(--ln);font-size:12.5px}.fx p{margin:4px 0}
+#psw{display:none;position:sticky;top:16px;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 8px 28px rgba(18,48,79,.18);max-height:calc(100vh - 32px);overflow:auto}body.psOn #psw{display:block}
+select{width:100%;margin-top:4px;padding:6px;border-radius:8px;border:1.5px solid var(--ln);background:#fff;font:inherit}
+#ps{margin:10px 0;font:12.5px/1.55 ui-monospace,Consolas,monospace}.ln{display:block;white-space:pre;padding:0 6px;border-left:4px solid transparent;border-radius:3px}.ln.on{background:var(--sh);border-left-color:var(--hot);font-weight:700}
+#why{margin:6px 0;padding:6px 10px;border-left:4px solid var(--hot);background:#FFF6EE;font-weight:600;min-height:32px}
+details{font-size:12.5px;color:var(--mu)}details ul{margin:6px 0;padding-left:18px}details li{margin:4px 0}
+@media(max-width:1000px){#app{grid-template-columns:1fr}#side{position:static;height:auto}#stage.grid,body.psOn #mainw{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<div id="app">
+<aside id="side">
+<div><h1>Laboratório de heaps</h1><p class="sub">Binário, 4-ário, 8-ário e Fibonacci</p></div>
+<div class="sec"><h2>Heap</h2><nav id="tabs"></nav></div>
+<div class="sec"><h2>Inserir</h2>
+<div class="row"><input id="k" type="number" placeholder="chave"><button class="op gr" id="bi">INSERT</button></div>
+<div class="row"><input id="l" placeholder="lista: 5 3 8 1"><button class="op gr" id="bl">Inserir lista</button></div>
+<div class="row"><input id="rn" type="number" value="10" min="1" max="31"><button class="op gr" id="br">Aleatórios</button></div></div>
+<div class="sec"><h2>Consultar</h2><div class="row"><button class="op or" id="bm">MINIMUM</button><button class="op or" id="be">EXTRACT-MIN</button></div></div>
+<div class="sec"><h2>Nó escolhido</h2><div id="sel"></div>
+<div class="row"><input id="nk" type="number" placeholder="nova chave"><button class="op bl" id="bd">DECREASE-KEY</button></div>
+<div class="row"><button class="op rd" id="bx">DELETE</button><button class="op rd" id="bc">Limpar (MAKE-HEAP)</button></div></div>
+<div class="sec"><h2>UNION</h2>
+<div class="row"><input id="ul" placeholder="lista: 4 9 2 7"><button class="op vi" id="bu">Unir lista</button></div>
+<div class="row"><input id="ur" type="number" value="5" min="1" max="15"><button class="op vi" id="bv">Unir aleatória</button></div></div>
+<div class="sec"><h2>Execução</h2><div class="row"><button id="bn">Próximo passo</button><button id="bf">Concluir</button></div>
+<div class="row"><label><input type="checkbox" id="au" checked> automático</label><label>pausa <input id="sp" type="range" min="100" max="1500" value="700"></label></div></div>
+<button class="pc" id="bp">Ver pseudocódigo</button>
+</aside>
+<div id="mainw"><div><div id="msg" role="status"></div><div id="stage"></div></div>
+<aside id="psw"><label style="display:block"><b>Pseudocódigo (Cormen)</b><select id="psel"></select></label><div id="ps"></div><p id="why"></p>
+<details id="cost"><summary>Como ler o custo (Fibonacci)</summary>
+<p><b>Função potencial:</b> Φ(H) = t(H) + 2·m(H)</p>
+<ul>
+<li><b>t(H)</b>: número de árvores na lista de raízes. Cada raiz extra é trabalho que o EXTRACT-MIN vai ter de consolidar depois.</li>
+<li><b>m(H)</b>: número de nós marcados (que já perderam um filho). Cada marca vale 2 porque paga um corte em cascata futuro.</li>
+<li><b>Φ</b>: o trabalho "guardado" na estrutura. Começa em 0 e nunca fica negativo.</li>
+<li><b>Custo real</b>: passos elementares da operação (comparações, links, cortes e nós processados).</li>
+<li><b>ΔΦ</b>: Φ depois menos Φ antes. É positivo quando a operação deixa trabalho para depois e negativo quando ela paga esse trabalho.</li>
+<li><b>Amortizado</b> = real + ΔΦ. É o custo "justo" da operação.</li>
+<li><b>Acumulado</b>: soma de todas as operações desde que o heap foi criado ou limpo (na UNION entram também as inserções do segundo heap). Como a soma dos ΔΦ é o Φ atual, acumulado amortizado − acumulado real = Φ atual. Por isso o total amortizado é sempre um limite superior do total real.</li>
+</ul>
+<p>Pelo Cormen: INSERT, UNION e DECREASE-KEY custam O(1) amortizado; EXTRACT-MIN e DELETE custam O(log n) amortizado.</p></details></aside></div>
+</div>
+<script>
+//#CORE
+const PHI=(1+Math.sqrt(5))/2,kk=k=>k===-Infinity?'−∞':k,fib=k=>{let a=0,b=1;while(k-->0)[a,b]=[b,a+b];return a};
+const S=(p,l,t,hl=[])=>({p,l,t,hl}),lg=n=>n>0?Math.floor(Math.log(n)/Math.log(PHI)+1e-9):0;
+class Heap{
+constructor(t,d,nm,col){this.t=t;this.d=d;this.nm=nm;this.col=col;this.reset()}
+reset(){Object.assign(this,{a:[],roots:[],min:null,n:0,c:0,M:{cmp:0,swp:0,lnk:0,cut:0,cas:0},T:{real:0,amor:0},last:null,cur:null,msg:'',aux:null,byId:{}})}
+size(){return this.t=='f'?this.n:this.a.length}
+marks(){return Object.values(this.byId).filter(x=>x.mk).length}
+phi(){return this.t=='f'?this.roots.length+2*this.marks():0}
+*del(id){if(!this.byId[id]){yield S('del','b','nó inexistente');return}
+ yield S('del','b','DELETE = DECREASE-KEY para −∞ e depois EXTRACT-MIN',[id]);yield* this.dec(id,-Infinity);yield* this.ext()}
+// ---- heap d-ário ----
+*up(i,p,tg){const a=this.a,d=this.d;while(i>0){const q=Math.floor((i-1)/d);this.M.cmp++;this.c++;
+ yield S(p,tg[0],`compara A[${i}]=${kk(a[i].k)} com o pai A[${q}]=${kk(a[q].k)}`,[a[i].id,a[q].id]);
+ if(a[q].k<=a[i].k)break;[a[i],a[q]]=[a[q],a[i]];this.M.swp++;this.c++;
+ yield S(p,tg[1],`troca: ${kk(a[q].k)} sobe para o índice ${q}`,[a[q].id,a[i].id]);i=q}}
+*down(i,p,tg){const a=this.a,d=this.d;for(;;){let m=i;
+ for(let j=d*i+1;j<=d*i+d&&j<a.length;j++){this.M.cmp++;this.c++;if(a[j].k<a[m].k)m=j}
+ yield S(p,tg[1],`menor entre A[${i}] e seus filhos: índice ${m} (chave ${kk(a[m].k)})`,[a[i].id,a[m].id]);
+ if(m==i){yield S(p,tg[2],'nenhum filho é menor: heap restaurado',[a[i].id]);break}
+ [a[i],a[m]]=[a[m],a[i]];this.M.swp++;this.c++;
+ yield S(p,tg[3],`troca: ${kk(a[m].k)} desce para o índice ${m}`,[a[i].id,a[m].id]);i=m}}
+*dins(id,k){const x={id,k};this.a.push(x);this.byId[id]=x;this.c++;
+ yield S('ins','c',`coloca ${k} na última posição (índice ${this.a.length-1})`,[id]);yield* this.up(this.a.length-1,'ins',['f','g'])}
+*dmn(){this.c++;yield S('min','b',this.a.length?`retorna A[0] = ${kk(this.a[0].k)}`:'heap vazio',this.a.length?[this.a[0].id]:[])}
+*dext(){const a=this.a;if(!a.length){yield S('ext','b','heap vazio');return}
+ const z=a[0];yield S('ext','c',`min = ${kk(z.k)}`,[z.id]);const l=a.pop();this.c++;delete this.byId[z.id];
+ if(a.length){a[0]=l;yield S('ext','d',`o último (${kk(l.k)}) vai para a raiz`,[l.id]);yield* this.down(0,'ext',['h','i','j','k'])}
+ yield S('ext','f',`retorna ${kk(z.k)}`)}
+*ddec(id,k){const a=this.a,i=a.findIndex(x=>x.id==id);if(i<0){yield S('dec','b','nó inexistente');return}
+ if(k>a[i].k){yield S('dec','b','erro: nova chave maior que a atual',[id]);return}
+ const o=a[i].k;a[i].k=k;this.c++;yield S('dec','c',`A[${i}].chave: ${kk(o)} → ${kk(k)}`,[id]);yield* this.up(i,'dec',['f','g'])}
+*duni(B){this.aux=B;yield S('uni','a','dois heaps d-ários: H1 e H2');
+ this.aux=null;this.a=this.a.concat(B.a);Object.assign(this.byId,B.byId);this.c+=B.a.length;
+ yield S('uni','b','A = A1 concatenado com A2 (ainda não é heap)');
+ for(let i=Math.floor((this.a.length-2)/this.d);i>=0;i--){yield S('uni','d',`SIFT-DOWN a partir do índice ${i}`,[this.a[i].id]);yield* this.down(i,'uni',['f','g','h','i'])}}
+// ---- heap de Fibonacci ----
+*fins(id,k){const x={id,k,deg:0,mk:false,p:null,ch:[]};this.byId[id]=x;this.c++;this.roots.push(x);this.n++;
+ yield S('ins','b',`cria o nó ${k} (grau 0, não marcado)`,[id]);
+ yield S('ins',this.min?'e':'d','entra na lista de raízes, sem consolidar: custo O(1)',[id]);
+ if(this.min){this.M.cmp++;this.c++;if(k<this.min.k){this.min=x;yield S('ins','f',`${k} < min: atualiza H.min`,[id])}}else this.min=x;
+ yield S('ins','g','H.n = '+this.n,[id])}
+*fmn(){this.c++;yield S('min','b',this.min?`retorna H.min = ${kk(this.min.k)}`:'heap vazio',this.min?[this.min.id]:[])}
+*funi(B){this.aux=B;yield S('uni','b','dois heaps de Fibonacci: H1 e H2');
+ this.aux=null;this.roots=this.roots.concat(B.roots);Object.assign(this.byId,B.byId);this.n+=B.n;this.c++;
+ yield S('uni','d','concatena as listas de raízes: custo O(1), sem consolidar');
+ if(B.min){this.M.cmp++;this.c++;if(!this.min||B.min.k<this.min.k)this.min=B.min}
+ yield S('uni','f',`H.min = ${this.min?kk(this.min.k):'NIL'}`,this.min?[this.min.id]:[]);yield S('uni','h','retorna H, com H.n = '+this.n)}
+*fext(){const z=this.min;if(!z){yield S('ext','b','heap vazio');return}
+ yield S('ext','b',`z = H.min = ${kk(z.k)}`,[z.id]);this.roots=this.roots.filter(r=>r!==z);
+ for(const x of z.ch){x.p=null;x.mk=false;this.roots.push(x);this.c++}
+ yield S('ext','e',`${z.ch.length} filho(s) de z viram raízes`,z.ch.map(x=>x.id));
+ delete this.byId[z.id];this.n--;
+ if(!this.roots.length){this.min=null;yield S('ext','g','lista de raízes vazia: H.min ← NIL')}
+ else{this.min=this.roots[0];yield S('ext','h','chama CONSOLIDATE(H)');yield* this.cons()}
+ yield S('ext','j',`retorna ${kk(z.k)}`)}
+*cons(){const A=[],ws=this.roots.slice();
+ yield S('ext','l',`arranjo A indexado pelo grau; máximo teórico ⌊log_φ n⌋ = ${lg(this.n)}`);
+ for(const w of ws){let x=w,d=x.deg;this.c++;yield S('ext','n',`visita a raiz ${kk(x.k)} (grau ${d})`,[x.id]);
+  while(A[d]){let y=A[d];this.M.cmp++;this.c++;yield S('ext','p',`A[${d}] já tem a raiz ${kk(y.k)}: duas árvores de grau ${d}`,[x.id,y.id]);
+   if(x.k>y.k){[x,y]=[y,x];yield S('ext','q',`troca: ${kk(x.k)} será o pai`,[x.id,y.id])}
+   this.roots=this.roots.filter(r=>r!==y);y.p=x;y.mk=false;x.ch.push(y);x.deg++;this.M.lnk++;this.c++;A[d]=null;d++;
+   yield S('ext','r',`LINK: ${kk(y.k)} vira filho de ${kk(x.k)} (grau ${d})`,[x.id,y.id])}
+  A[d]=x;yield S('ext','t',`A[${d}] ← ${kk(x.k)}`,[x.id])}
+ this.min=null;for(const r of this.roots){this.c++;this.M.cmp++;if(!this.min||r.k<this.min.k)this.min=r}
+ yield S('ext','x',`recria a lista de raízes; novo H.min = ${kk(this.min.k)}`,[this.min.id])}
+*fdec(id,k){const x=this.byId[id];if(!x){yield S('dec','b','nó inexistente');return}
+ if(k>x.k){yield S('dec','b','erro: nova chave maior que a atual',[id]);return}
+ const o=x.k,y=x.p;x.k=k;this.c++;yield S('dec','c',`x.chave: ${kk(o)} → ${kk(k)}; pai y = ${y?kk(y.k):'NIL'}`,[id]);
+ if(y){this.M.cmp++;this.c++}
+ yield S('dec','d',y?`${kk(k)} < pai ${kk(y.k)}? ${k<y.k?'sim':'não'}`:'x já é raiz: nada a cortar',[id]);
+ if(y&&x.k<y.k){yield* this.cut(x,y);yield* this.cas(y)}
+ this.M.cmp++;this.c++;
+ if(x.k<this.min.k){this.min=x;yield S('dec','g','x é o novo H.min',[id])}else yield S('dec','g','H.min permanece',[this.min.id])}
+*cut(x,y){y.ch=y.ch.filter(c=>c!==x);y.deg--;this.roots.push(x);x.p=null;x.mk=false;this.M.cut++;this.c++;
+ yield S('dec','j',`CUT: ${kk(x.k)} sai de ${kk(y.k)} e vira raiz (desmarcado)`,[x.id,y.id])}
+*cas(y){const z=y.p;yield S('dec','l',`CASCADING-CUT em ${kk(y.k)}: z = ${z?kk(z.k):'NIL'}`,[y.id]);
+ if(z){if(!y.mk){y.mk=true;yield S('dec','n',`${kk(y.k)} perdeu o primeiro filho: fica marcado`,[y.id])}
+ else{this.M.cas++;yield S('dec','o',`${kk(y.k)} já estava marcado: corta também`,[y.id]);yield* this.cut(y,z);yield* this.cas(z)}}}
+}
+for(const n of ['ins','mn','ext','dec','uni'])Heap.prototype[n]=function*(...a){yield* this[(this.t=='f'?'f':'d')+n](...a)};
+const PS={f:{
+make:`a|MAKE-FIB-HEAP()
+b|  aloque H
+c|  H.n ← 0; H.min ← NIL
+d|  retorne H`,
+ins:`a|FIB-HEAP-INSERT(H, x)
+b|  x.grau ← 0; x.p ← NIL; x.filho ← NIL; x.marca ← FALSE
+c|  se H.min = NIL
+d|    crie lista de raízes de H só com x; H.min ← x
+e|  senão insira x na lista de raízes de H
+f|    se x.chave < H.min.chave então H.min ← x
+g|  H.n ← H.n + 1`,
+min:`a|FIB-HEAP-MINIMUM(H)
+b|  retorne H.min`,
+uni:`a|FIB-HEAP-UNION(H1, H2)
+b|  H ← MAKE-FIB-HEAP()
+c|  H.min ← H1.min
+d|  concatene a lista de raízes de H2 com a de H
+e|  se H1.min = NIL ou (H2.min ≠ NIL e H2.min.chave < H1.min.chave)
+f|    H.min ← H2.min
+g|  H.n ← H1.n + H2.n
+h|  retorne H`,
+ext:`a|FIB-HEAP-EXTRACT-MIN(H)
+b|  z ← H.min
+c|  se z ≠ NIL
+d|    para cada filho x de z
+e|      adicione x à lista de raízes; x.p ← NIL; x.marca ← FALSE
+f|    remova z da lista de raízes de H
+g|    se z = z.direita então H.min ← NIL
+h|    senão H.min ← z.direita; CONSOLIDATE(H)
+i|    H.n ← H.n − 1
+j|  retorne z
+k|CONSOLIDATE(H)
+l|  seja A[0..D(H.n)] um novo arranjo; A[i] ← NIL
+m|  para cada nó w na lista de raízes de H
+n|    x ← w; d ← x.grau
+o|    enquanto A[d] ≠ NIL
+p|      y ← A[d]
+q|      se x.chave > y.chave então troque x ↔ y
+r|      FIB-HEAP-LINK(H, y, x)
+s|      A[d] ← NIL; d ← d + 1
+t|    A[d] ← x
+u|  H.min ← NIL
+v|  para i ← 0 até D(H.n)
+w|    se A[i] ≠ NIL
+x|      reinsira A[i] na lista de raízes; atualize H.min
+y|FIB-HEAP-LINK(H, y, x)
+z|  remova y da lista de raízes; y vira filho de x; x.grau++; y.marca ← FALSE`,
+dec:`a|FIB-HEAP-DECREASE-KEY(H, x, k)
+b|  se k > x.chave então erro "nova chave é maior"
+c|  x.chave ← k; y ← x.p
+d|  se y ≠ NIL e x.chave < y.chave
+e|    CUT(H, x, y)
+f|    CASCADING-CUT(H, y)
+g|  se x.chave < H.min.chave então H.min ← x
+h|CUT(H, x, y)
+i|  remova x da lista de filhos de y; y.grau ← y.grau − 1
+j|  adicione x à lista de raízes; x.p ← NIL; x.marca ← FALSE
+k|CASCADING-CUT(H, y)
+l|  z ← y.p
+m|  se z ≠ NIL
+n|    se y.marca = FALSE então y.marca ← TRUE
+o|    senão CUT(H, y, z); CASCADING-CUT(H, z)`,
+del:`a|FIB-HEAP-DELETE(H, x)
+b|  FIB-HEAP-DECREASE-KEY(H, x, −∞)
+c|  FIB-HEAP-EXTRACT-MIN(H)`},
+d:{
+make:`a|MAKE-DARY-HEAP()
+b|  A ← arranjo vazio; A.tamanho ← 0
+c|  retorne A`,
+ins:`a|DARY-INSERT(A, x)
+b|  A.tamanho ← A.tamanho + 1
+c|  A[A.tamanho − 1] ← x
+d|  SIFT-UP(A, A.tamanho − 1)
+e|SIFT-UP(A, i)      PAI(i) = ⌊(i − 1)/d⌋
+f|  enquanto i > 0 e A[PAI(i)].chave > A[i].chave
+g|    troque A[i] ↔ A[PAI(i)]; i ← PAI(i)`,
+min:`a|DARY-MINIMUM(A)
+b|  retorne A[0]`,
+ext:`a|DARY-EXTRACT-MIN(A)
+b|  se A.tamanho < 1 então erro "heap vazio"
+c|  min ← A[0]
+d|  A[0] ← A[A.tamanho − 1]; A.tamanho ← A.tamanho − 1
+e|  SIFT-DOWN(A, 0)
+f|  retorne min
+g|SIFT-DOWN(A, i)
+h|  repita
+i|    m ← índice do menor entre A[i] e seus d filhos (d·i+1 … d·i+d)
+j|    se m = i então pare
+k|    troque A[i] ↔ A[m]; i ← m`,
+dec:`a|DARY-DECREASE-KEY(A, i, k)
+b|  se k > A[i].chave então erro "nova chave é maior"
+c|  A[i].chave ← k
+d|  SIFT-UP(A, i)
+e|SIFT-UP(A, i)
+f|  enquanto i > 0 e A[PAI(i)].chave > A[i].chave
+g|    troque A[i] ↔ A[PAI(i)]; i ← PAI(i)`,
+del:`a|DARY-DELETE(A, i)
+b|  DARY-DECREASE-KEY(A, i, −∞)
+c|  DARY-EXTRACT-MIN(A)`,
+uni:`a|DARY-UNION(A1, A2)
+b|  A ← A1 concatenado com A2
+c|  para i ← ⌊(n − 2)/d⌋ até 0      (BUILD-HEAP, Θ(n))
+d|    SIFT-DOWN(A, i)
+e|SIFT-DOWN(A, i)
+f|  repita
+g|    m ← índice do menor entre A[i] e seus d filhos
+h|    se m = i então pare
+i|    troque A[i] ↔ A[m]; i ← m`}};
+//#UI
+const $=s=>document.querySelector(s),esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const MODES=['Binário (d=2)','4-ário (d=4)','8-ário (d=8)','Fibonacci','Comparar os 4'];
+const mkSet=()=>[new Heap('d',2,MODES[0],'#2B5C8F'),new Heap('d',4,MODES[1],'#6B4FA0'),new Heap('d',8,MODES[2],'#A8661A'),new Heap('f',0,'Fibonacci','#0E7C6B')];
+const SET={s:mkSet(),c:mkSet()};let mode=3,foc=0,run=null,nid=1,sel=null;
+const act=()=>mode<4?[SET.s[mode]]:SET.c,room=()=>(mode<4?31:15)-Math.max(...act().map(h=>h.size()));
+const say=m=>$('#msg').textContent=m,parse=s=>s.split(/[\s,;]+/).map(x=>parseInt(x)).filter(x=>!isNaN(x));
+const rand=n=>Array.from({length:n},()=>1+Math.floor(Math.random()*99));
+['make:MAKE-HEAP','ins:INSERT','min:MINIMUM','ext:EXTRACT-MIN','dec:DECREASE-KEY','del:DELETE','uni:UNION'].forEach(o=>{const[v,t]=o.split(':');$('#psel').add(new Option(t,v))});$('#psel').value='ins';
+function rec(h,op,c0,p0){const real=h.c-c0,dp=h.phi()-p0,am=real+dp;h.last={op,real,dp,am};h.T.real+=real;h.T.amor+=am}
+function bulk(keys){if(run)return;const ks=keys.slice(0,Math.max(0,room()));if(!ks.length)return say('Limite de nós atingido ('+(mode<4?31:15)+') ou lista vazia.');
+ const ids=ks.map(()=>nid++);act().forEach(h=>ks.forEach((k,j)=>{const c0=h.c,p0=h.phi();for(const _ of h.ins(ids[j],k));rec(h,'INSERT',c0,p0)}));
+ say(`${ks.length} valor(es) inserido(s)${ks.length<keys.length?' (cortado pelo limite de nós)':''}.`);draw()}
+function start(op,p,mk){if(run)return;const its=[];
+ act().forEach(h=>{h.pb=0;const g=mk(h);if(g)its.push({h,g,c0:h.c,p0:h.phi()+h.pb})});
+ if(!its.length)return say('Nada a fazer: o nó não existe neste heap.');
+ say('');$('#psel').value=p;run={op,its,t:null};busy(true);step();if($('#au').checked&&run)run.t=setInterval(step,+$('#sp').value)}
+function step(){if(!run)return;let live=0;
+ for(const it of run.its){if(it.done)continue;const r=it.g.next();
+  if(r.done){it.done=1;it.h.cur=null;rec(it.h,run.op,it.c0,it.p0)}else{it.h.cur=r.value;it.h.msg=r.value.t;live++}}
+ if(!live){clearInterval(run.t);run=null;busy(false)}draw()}
+const busy=b=>{document.querySelectorAll('.op').forEach(x=>x.disabled=b);$('#bn').disabled=$('#bf').disabled=!b};
+const dtree=h=>{const a=h.a,d=h.d,m=i=>({id:a[i].id,k:a[i].k,deg:0,mk:false,isMin:i==0,kids:Array.from({length:d},(_,j)=>d*i+1+j).filter(j=>j<a.length).map(m)});return a.length?[m(0)]:[]};
+const ftree=h=>{const c=x=>({id:x.id,k:x.k,deg:x.deg,mk:x.mk,isMin:x===h.min,kids:x.ch.map(c)});return h.roots.map(c)};
+const tr=h=>h.t=='d'?dtree(h):ftree(h),UX=38,UY=56;
+const lay=n=>n.w=n.kids.length?n.kids.reduce((s,c)=>s+lay(c),0):1;
+function pl(n,x,y,o,e,par){n.x=x+n.w/2;n.y=y;o.push(n);if(par)e.push([par,n]);let cx=x;for(const c of n.kids){pl(c,cx,y+1,o,e,n);cx+=c.w}}
+function svg(h){const hl=h.cur?h.cur.hl:[],gs=[{l:h.aux?'H1':'',r:tr(h)}];if(h.aux)gs.push({l:'H2',r:tr(h.aux)});
+ const N=[],E=[];let x=0;gs.forEach(g=>{g.x=x;g.r.forEach(t=>{lay(t);pl(t,x,0,N,E,null);x+=t.w});x+=1.2});
+ if(!N.length)return'<div class="em">heap vazio</div>';x-=1.2;
+ const W=x*UX+20,H=(Math.max(...N.map(n=>n.y))+1)*UY+30,X=n=>n.x*UX+10,Y=n=>n.y*UY+34;
+ let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${Math.max(W,160)}px">`;
+ gs.forEach(g=>{if(g.l)s+=`<text x="${g.x*UX+10}" y="12" class="gl">${g.l}</text>`;
+  if(h.t=='f'&&g.r.length>1)s+=`<line x1="${X(g.r[0])}" x2="${X(g.r[g.r.length-1])}" y1="34" y2="34" class="rl"/>`});
+ E.forEach(([a,b])=>s+=`<line x1="${X(a)}" y1="${Y(a)}" x2="${X(b)}" y2="${Y(b)}" class="ed" stroke="${h.col}" stroke-opacity=".5"/>`);
+ N.forEach(n=>{const on=hl.includes(n.id),mn=n.isMin&&!on,f=on?'#FFE8CC':n.mk?'#1F2D3D':mn?h.col:'#fff',tc=n.mk||mn?'#fff':'#142030';
+  s+=`<g class="nd" data-id="${n.id}">`+(n.id==sel?`<circle cx="${X(n)}" cy="${Y(n)}" r="20" class="sl"/>`:'')+
+  `<circle cx="${X(n)}" cy="${Y(n)}" r="15" fill="${f}" stroke="${on?'#D9480F':h.col}" stroke-width="${on?3:1.6}"/><text x="${X(n)}" y="${Y(n)}" fill="${tc}">${kk(n.k)}</text>`+
+  (h.t=='f'?`<text x="${X(n)-18}" y="${Y(n)-16}" class="dg">${n.deg}</text>`:'')+'</g>'});
+ return s+'</svg>'}
+const sz=n=>1+n.ch.reduce((s,c)=>s+sz(c),0),sg=v=>v>0?'+'+v:v;
+const MC=['#2B5C8F','#6B4FA0','#A8661A','#0E7C6B','#12304F'];
+function met(h){if(h.t!='f')return`<div class="mt"><span><b>${h.M.cmp}</b>comparações</span><span><b>${h.M.swp}</b>trocas</span></div>`;
+ const L=h.last,m=h.marks();
+ return`<div class="mt"><span><b>${h.M.cmp}</b>comparações</span><span><b>${h.M.lnk}</b>links</span><span><b>${h.M.cut}</b>cortes</span><span><b>${h.M.cas}</b>cortes em cascata</span></div>
+ <table><tr><th>Φ = t + 2m = ${h.roots.length} + 2·${m} = ${h.phi()}</th><th>custo real</th><th>ΔΦ</th><th>amortizado</th></tr>
+ <tr><td>${L?L.op:'última operação'}</td><td>${L?L.real:'-'}</td><td>${L?sg(L.dp):'-'}</td><td>${L?L.am:'-'}</td></tr>
+ <tr><td title="Soma de todas as operações desde que o heap foi criado ou limpo">acumulado</td><td>${h.T.real}</td><td>${sg(h.phi())}</td><td>${h.T.amor}</td></tr></table>`}
+function fibx(h){const rows=h.roots.slice(0,8).map(r=>{const s=sz(r),f=fib(r.deg+2);return`<tr><td>raiz ${kk(r.k)}</td><td>${r.deg}</td><td>${s}</td><td>F(${r.deg+2}) = ${f}</td><td>${s>=f?'✓':'✗'}</td></tr>`}).join('');
+ const D=Math.max(0,...Object.values(h.byId).map(x=>x.deg));
+ return`<div class="fx"><b>Fibonacci na estrutura</b><p>Um nó de grau k tem subárvore com pelo menos F(k+2) nós (1, 2, 3, 5, 8, 13…). Por isso o grau máximo é limitado por ⌊log<sub>φ</sub> n⌋.</p>
+ <table><tr><th></th><th>grau k</th><th>nós</th><th>mínimo</th><th></th></tr>${rows}</table>
+ <p>Grau máximo observado D = ${D}; limite ⌊log<sub>φ</sub> ${h.n}⌋ = ${lg(h.n)} (${D<=lg(h.n)?'respeitado':'violado'}).</p></div>`}
+function panel(h,i){const hl=h.cur?h.cur.hl:[];let st='';
+ if(h.t=='d'){const f=a=>a.map(x=>`<i class="${hl.includes(x.id)?'on':''}">${kk(x.k)}</i>`).join('');st=`<div class="st">${f(h.a)}${h.aux?' | '+f(h.aux.a):''}</div>`}
+ return`<section class="pn ${i==foc&&mode==4?'foc':''}" data-i="${i}" style="--c:${h.col}"><h3>${h.nm} <small>n = ${h.size()}</small></h3>${svg(h)}${st}${met(h)}${h.t=='f'?fibx(h):''}</section>`}
+function drawPs(){const h=act()[foc],p=h.cur?h.cur.p:$('#psel').value,l=h.cur?h.cur.l:null,src=PS[h.t][p]||PS[h.t].make;
+ $('#ps').innerHTML=src.split('\n').map(s=>{const[t,...r]=s.split('|');return`<span class="${t==l?'ln on':'ln'}">${esc(r.join('|'))}</span>`}).join('');
+ $('#cost').hidden=h.t!='f';$('#why').textContent=h.msg||'Execute uma operação para ver cada passo.'}
+function draw(){const hs=act();foc=Math.min(foc,hs.length-1);if(sel!=null&&!hs[0].byId[sel])sel=null;
+ $('#tabs').innerHTML=MODES.map((m,i)=>`<button data-m="${i}" style="--c:${MC[i]}" class="${i==mode?'on':''}">${m}</button>`).join('');
+ $('#stage').className=mode==4?'grid':'';$('#stage').innerHTML=hs.map(panel).join('');
+ $('#sel').textContent=sel==null?'clique num nó do desenho':`chave ${kk(hs[0].byId[sel].k)}`;drawPs()}
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(b&&!run){mode=+b.dataset.m;foc=0;draw()}};
+$('#stage').onclick=e=>{const n=e.target.closest('.nd'),h=e.target.closest('h3');if(n){sel=+n.dataset.id;draw()}else if(h){foc=+h.closest('.pn').dataset.i;draw()}};
+$('#psel').onchange=drawPs;
+$('#bi').onclick=()=>{const k=parseInt($('#k').value);if(isNaN(k))return say('Digite uma chave inteira.');if(room()<1)return say('Limite de nós atingido.');const id=nid++;start('INSERT','ins',h=>h.ins(id,k))};
+$('#bl').onclick=()=>bulk(parse($('#l').value));$('#br').onclick=()=>bulk(rand(Math.max(1,+$('#rn').value||1)));
+$('#bc').onclick=()=>{if(run)return;act().forEach(h=>h.reset());sel=null;$('#psel').value='make';say('MAKE-HEAP: heaps vazios criados.');draw()};
+$('#bm').onclick=()=>start('MINIMUM','min',h=>h.mn());$('#be').onclick=()=>start('EXTRACT-MIN','ext',h=>h.ext());
+$('#bd').onclick=()=>{const k=parseInt($('#nk').value);if(sel==null)return say('Clique num nó para escolhê-lo.');if(isNaN(k))return say('Digite a nova chave.');start('DECREASE-KEY','dec',h=>h.byId[sel]?h.dec(sel,k):null)};
+$('#bx').onclick=()=>{if(sel==null)return say('Clique num nó para escolhê-lo.');const id=sel;start('DELETE','del',h=>h.byId[id]?h.del(id):null)};
+function uni(keys){if(run)return;keys=keys.slice(0,Math.max(0,room()));if(!keys.length)return say('Lista vazia ou limite de nós atingido.');const ids=keys.map(()=>nid++);
+ start('UNION','uni',h=>{const B=new Heap(h.t,h.d);keys.forEach((k,j)=>{const c0=B.c,p0=B.phi();for(const _ of B.ins(ids[j],k));rec(B,'INSERT',c0,p0)});h.T.real+=B.T.real;h.T.amor+=B.T.amor;h.pb=B.phi();return h.uni(B)})}
+$('#bu').onclick=()=>uni(parse($('#ul').value));$('#bv').onclick=()=>uni(rand(Math.max(1,+$('#ur').value||1)));
+$('#bn').onclick=()=>{if(run){clearInterval(run.t);step()}};$('#bf').onclick=()=>{if(run)clearInterval(run.t);let n=0;while(run&&n++<5000)step()};
+$('#bp').onclick=()=>{const on=document.body.classList.toggle('psOn');$('#bp').textContent=on?'Ocultar pseudocódigo':'Ver pseudocódigo'};
+busy(false);draw();
+</script></body></html>
