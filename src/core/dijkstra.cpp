@@ -1,5 +1,5 @@
 #include "dijkstra.hpp"
-#include "heap_binario.hpp"
+#include "heap_dario.hpp"
 #include "heap_fibonacci.hpp"
 #include <algorithm>
 #include <stdexcept>
@@ -68,7 +68,7 @@ vector<int> ResultadoDijkstra::reconstruir_caminho(int destino) const {
 
 // Dijkstra com Heap Binário — Complexidade: O((V + E) log V) -------------------------------------------
 
-ResultadoDijkstra dijkstra_heap_binario(const Grafo& grafo, int origem) {
+ResultadoDijkstra dijkstra_heap_dario(const Grafo& grafo, int origem, int d) {
     int V = grafo.obter_num_vertices();
     if (origem < 0 || origem >= V) {
         throw out_of_range("Vertice de origem invalido.");
@@ -84,13 +84,13 @@ ResultadoDijkstra dijkstra_heap_binario(const Grafo& grafo, int origem) {
     vector<bool> visitado(V, false);
 
     // Fila de prioridade Q = G.V (chave = distância, valor = vértice)
-    HeapBinario Q;
+    HeapDArio Q(d);
     for (int v = 0; v < V; v++) {
         Q.insert(resultado.distancias[v], v);
     }
 
     while (!Q.esta_vazio()) {
-        HeapBinario::NoBinario menor = Q.extract_min();
+        HeapDArio::NoDario menor = Q.extract_min();
         int u = menor.valor;
         visitado[u] = true;
 

@@ -1,44 +1,37 @@
-#include "heap_binario.hpp"
+#include "heap_dario.hpp"
 #include <climits>
 #include <algorithm>
 
 using namespace std;
 
 // métodos privados --------------------------------------------------------------------------------------
-int HeapBinario::pai(int indiceFilho) const {
-    return (indiceFilho - 1) / 2;
+int HeapDArio::pai(int indiceFilho) const {
+    return (indiceFilho - 1) / d;
 }
 
-int HeapBinario::filho_esq(int indicePai) const {
-    return (indicePai * 2) + 1;
+int HeapDArio::primeiro_filho(int indicePai) const {
+    return (indicePai * d) + 1;
 }
 
-int HeapBinario::filho_dir(int indicePai) const {
-    return (indicePai * 2) + 2;
-}
-
-void HeapBinario::swap_nos(int a, int b) {
+void HeapDArio::swap_nos(int a, int b) {
     posicao[vetor[a].valor] = b;
     posicao[vetor[b].valor] = a;
 
-    NoBinario aux = vetor[a];
+    NoDario aux = vetor[a];
     vetor[a] = vetor[b];
     vetor[b] = aux;
 }
 
-void HeapBinario::heapify_down(int indicePai) {
+void HeapDArio::heapify_down(int indicePai) {
     int indiceMelhor = indicePai;
     int n = vetor.size();
-    
-    int esq = filho_esq(indicePai);
-    int dir = filho_dir(indicePai);
+    int prim_filho = primeiro_filho(indicePai);
 
-    if (esq < n && vetor[esq].chave < vetor[indiceMelhor].chave) {
-        indiceMelhor = esq;
-    }
-    
-    if (dir < n && vetor[dir].chave < vetor[indiceMelhor].chave) {
-        indiceMelhor = dir;
+    for (int k = 0; k < d; k++) {
+        int filho_atual = prim_filho + k;
+        if (filho_atual < n && vetor[filho_atual].chave < vetor[indiceMelhor].chave) {
+            indiceMelhor = filho_atual;
+        }
     }
 
     if (indiceMelhor != indicePai) {
@@ -47,7 +40,7 @@ void HeapBinario::heapify_down(int indicePai) {
     }
 }
 
-void HeapBinario::heapify_up(int indiceFilho) {
+void HeapDArio::heapify_up(int indiceFilho) {
     while (indiceFilho > 0 && vetor[pai(indiceFilho)].chave > vetor[indiceFilho].chave) {
         swap_nos(indiceFilho, pai(indiceFilho));
         indiceFilho = pai(indiceFilho);
@@ -55,33 +48,36 @@ void HeapBinario::heapify_up(int indiceFilho) {
 }
 
 // métodos públicos --------------------------------------------------------------------------------------
-HeapBinario::HeapBinario() {}
+HeapDArio::HeapDArio(int d) : d(d) {
+    if (d < 2) {
+        throw invalid_argument("A aridade d deve ser no minimo 2.");
+    }
+}
 
-HeapBinario::~HeapBinario() {}
+HeapDArio::~HeapDArio() {}
 
-void HeapBinario::insert(int chave, int valor) {
-    vetor.push_back(NoBinario(chave, valor));
+void HeapDArio::insert(int chave, int valor) {
+    vetor.push_back(NoDario(chave, valor));
     int indice_atual = vetor.size() - 1;
     
     posicao[valor] = indice_atual;
     heapify_up(indice_atual);
 }
 
-HeapBinario::NoBinario HeapBinario::minimum() const {
-    if (esta_vazio()){
+HeapDArio::NoDario HeapDArio::minimum() const {
+    if (esta_vazio()) {
         throw runtime_error("Heap vazio");
     } 
 
     return vetor[0];
 }
 
-
-HeapBinario::NoBinario HeapBinario::extract_min() {
-    if (esta_vazio()){
-         throw runtime_error("Heap vazio");
+HeapDArio::NoDario HeapDArio::extract_min() {
+    if (esta_vazio()) {
+        throw runtime_error("Heap vazio");
     }
     
-    NoBinario min_node = vetor[0];
+    NoDario min_node = vetor[0];
     posicao.erase(min_node.valor);
 
     if (vetor.size() > 1) {
@@ -96,13 +92,13 @@ HeapBinario::NoBinario HeapBinario::extract_min() {
     return min_node;
 }
 
-void HeapBinario::decrease_key(int valor, int chave_nova) {
-    if (posicao.find(valor) == posicao.end()){
+void HeapDArio::decrease_key(int valor, int chave_nova) {
+    if (posicao.find(valor) == posicao.end()) {
         return;
     }
 
     int i = posicao[valor];
-    if (chave_nova > vetor[i].chave){
+    if (chave_nova > vetor[i].chave) {
         return;
     }
 
@@ -110,7 +106,7 @@ void HeapBinario::decrease_key(int valor, int chave_nova) {
     heapify_up(i);
 }
 
-HeapBinario::NoBinario HeapBinario::delete_no(int valor) {
+HeapDArio::NoDario HeapDArio::delete_no(int valor) {
     if (posicao.find(valor) == posicao.end()) {
         throw runtime_error("Valor não encontrado");
     }
@@ -119,8 +115,12 @@ HeapBinario::NoBinario HeapBinario::delete_no(int valor) {
     return extract_min();
 }
 
-HeapBinario* HeapBinario::union_heaps(HeapBinario& H1, HeapBinario& H2) {
-    HeapBinario* H = new HeapBinario();
+HeapDArio* HeapDArio::union_heaps(HeapDArio& H1, HeapDArio& H2) {
+    if (H1.d != H2.d) {
+        throw invalid_argument("Os heaps devem possuir a mesma aridade d para a uniao.");
+    }
+
+    HeapDArio* H = new HeapDArio(H1.d);
     
     if (H1.esta_vazio() && H2.esta_vazio()) return H;
 
@@ -136,7 +136,7 @@ HeapBinario* HeapBinario::union_heaps(HeapBinario& H1, HeapBinario& H2) {
     }
 
     int n = H->vetor.size();
-    for (int i = (n / 2) - 1; i >= 0; i--) {
+    for (int i = (n / H1.d) - 1; i >= 0; i--) {
         H->heapify_down(i);
     }
 
@@ -146,10 +146,10 @@ HeapBinario* HeapBinario::union_heaps(HeapBinario& H1, HeapBinario& H2) {
     return H;
 }
 
-int HeapBinario::tamanho_heap() const {
+int HeapDArio::tamanho_heap() const {
     return vetor.size();
 }
 
-bool HeapBinario::esta_vazio() const {
+bool HeapDArio::esta_vazio() const {
     return vetor.empty();
 }

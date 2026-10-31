@@ -34,7 +34,7 @@ struct ResultadoDijkstra {
     std::vector<int> reconstruir_caminho(int destino) const;
 };
 
-ResultadoDijkstra dijkstra_heap_binario(const Grafo& grafo, int origem);
+ResultadoDijkstra dijkstra_heap_dario(const Grafo& grafo, int origem, int d);
 ResultadoDijkstra dijkstra_heap_fibonacci(const Grafo& grafo, int origem);
 
 #endif
