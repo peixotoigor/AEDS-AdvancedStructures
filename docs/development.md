@@ -1,77 +1,99 @@
-# Desenvolvimento
+# Desenvolvimento — Árvore de Van Emde Boas (vEB Tree)
 
-## Fluxo específico
+## Fluxo Específico de Implementação Procedural
 
-1. Implementar e testar primeiro as operações de lista circular.
-2. Implementar criação, inserção e consulta do mínimo.
-3. Implementar união de dois heaps.
-4. Implementar extração do mínimo e consolidação.
-5. Implementar diminuir chave, corte e corte em cascata.
-6. Implementar remoção e destruição completa.
-7. Validar invariantes após cada etapa.
+A construção da Árvore de Van Emde Boas deve seguir uma sequência estritamente incremental, garantindo que cada camada conceitual seja validada antes do avanço para a seguinte:
 
-## Fluxo recomendado
+1. **Aritmética de Bits e Decomposição:**
+   - Implementar e testar unitariamente `veb_high(x, u)`, `veb_low(x, u)`, `veb_index(h, l, u)`, `veb_sqrt_up(u)` e `veb_sqrt_down(u)`.
+2. **Alocação e Desalocação Recursiva:**
+   - Implementar `veb_criar(u)` e `veb_destruir(V)`, validando ausência de vazamento de memória para $u = 2, 4, 16, 65536$.
+3. **Caso Base ($u = 2$) e Consultas Elementares:**
+   - Implementar `veb_vazio(V)`, `veb_minimo(V)` e `veb_maximo(V)` em $O(1)$.
+   - Implementar pertinência (`veb_pertence`) para $u = 2$ e recursivo.
+4. **Consultas Ordenadas:**
+   - Implementar `veb_sucessor(V, x)` e `veb_predecessor(V, x)` com saltos via *summary* em $O(\log \log u)$.
+5. **Inserção com Invariante de Mínimo:**
+   - Implementar `veb_inserir(V, x)`, assegurando que $min$ nunca desça para os clusters e que no máximo uma chamada recursiva ocorra.
+6. **Remoção e Atualização de Resumo:**
+   - Implementar `veb_remover(V, x)`, tratando promoção de $new\_min$ e remoção no *summary* quando clusters esvaziarem.
+7. **Validação de Invariantes e Differential Testing:**
+   - Implementar `veb_verificar_invariantes(V)` e submeter ao estresse com `std::set` como oráculo.
+8. **Benchmarks e Avaliação Empírica:**
+   - Executar suíte de medição ($10\times$ repetições) sob variação de $u$ e densidade $\alpha$.
+9. **Pós-Processamento e Relatório:**
+   - Gerar gráficos e tabelas com script Python e compilar monografia LaTeX.
 
-1. Entender o requisito e localizar o código relacionado.
-2. Identificar o comportamento esperado e os casos-limite.
-3. Implementar a menor mudança completa.
-4. Adicionar ou atualizar testes.
-5. Executar a validação relevante.
-6. Atualizar a documentação relacionada.
-7. Inspecionar o diff antes de concluir.
+## Comandos de Compilação e Execução (PowerShell no Windows)
 
-## Código
-
-- Seguir o estilo existente.
-- Preferir soluções simples e legíveis.
-- Evitar duplicação.
-- Tratar erros explicitamente.
-- Não introduzir dependências sem necessidade.
-- Não alterar arquivos fora do escopo.
-
-## Compilação manual
-
-Enquanto não houver outro comando definido pelo repositório:
+### 1. Demonstração e Uso Básico
 
 ```powershell
 New-Item -ItemType Directory -Force build
 
 g++ -std=c++20 -Wall -Wextra -pedantic `
-    src\core\fibonacci_heap.cpp src\core\main.cpp `
+    src\core\van_emde_boas.cpp src\core\main.cpp `
     -Isrc\include `
-    -o build\fibonacci_heap.exe
+    -o build\van_emde_boas.exe
 
-.\build\fibonacci_heap.exe
+.\build\van_emde_boas.exe
 ```
 
-Para testar erros de memória, usar um compilador que ofereça os sanitizers:
+### 2. Suíte de Testes Unitários, Invariantes e Differential Testing
 
 ```powershell
 g++ -std=c++20 -Wall -Wextra -pedantic `
-    -fsanitize=address,undefined -fno-omit-frame-pointer `
-    src\core\fibonacci_heap.cpp src\core\main.cpp `
+    src\core\van_emde_boas.cpp tests\van_emde_boas_tests.cpp `
     -Isrc\include `
-    -o build\fibonacci_heap-sanitized.exe
+    -o build\van_emde_boas_tests.exe
+
+.\build\van_emde_boas_tests.exe
 ```
 
-Se essa opção não estiver disponível no ambiente Windows, registrar a
-limitação e usar outra ferramenta de diagnóstico disponível.
+### 3. Benchmarks de Desempenho e Consumo de Memória ($10\times$ Repetições)
 
-## Experimentos
+```powershell
+New-Item -ItemType Directory -Force benchmarks/data, benchmarks/figures, benchmarks/tables
 
-Quando desempenho for parte do objetivo:
+g++ -std=c++20 -O3 -Wall -Wextra `
+    src\core\van_emde_boas.cpp tests\benchmark_van_emde_boas.cpp `
+    -Isrc\include -lpsapi `
+    -o build\benchmark_runner.exe
 
-- definir entradas representativas;
-- variar progressivamente o tamanho;
-- repetir medições quando houver variação;
-- registrar as condições do experimento;
-- salvar dados brutos antes de gerar gráficos;
-- explicar diferenças entre a teoria e os resultados observados.
+.\build\benchmark_runner.exe
+```
 
-Comparar, quando possível, o Fibonacci Heap com `std::priority_queue`,
-deixando claro que `std::priority_queue` não oferece `decrease-key` diretamente.
+### 4. Pós-Processamento e Geração de Gráficos via Python
 
-## Commits e revisão
+```powershell
+python benchmarks\gerar_graficos.py
+```
 
-Commits devem representar mudanças coerentes. Antes de solicitar revisão,
-descrever o que mudou, como foi validado e quais limitações permanecem.
+Para exploração visual e interativa dos dados via Jupyter Notebook:
+
+```powershell
+jupyter notebook benchmarks\analise_graficos.ipynb
+```
+
+### 5. Compilação do Relatório Monográfico em LaTeX
+
+```powershell
+pdflatex -interaction=nonstopmode -output-directory=report report/main.tex
+bibtex report/main
+pdflatex -interaction=nonstopmode -output-directory=report report/main.tex
+pdflatex -interaction=nonstopmode -output-directory=report report/main.tex
+```
+
+## Sanitizers de Memória e Depuração
+
+Para verificação de ponteiros inválidos, vazamentos e undefined behavior em compiladores compatíveis:
+
+```powershell
+g++ -std=c++20 -Wall -Wextra -pedantic `
+    "-fsanitize=address,undefined" -fno-omit-frame-pointer `
+    src\core\van_emde_boas.cpp tests\van_emde_boas_tests.cpp `
+    -Isrc\include `
+    -o build\van_emde_boas-sanitized.exe
+```
+
+Caso o ambiente MinGW local não disponha de `libasan`, a ausência de vazamentos é comprovada pelo validador formal de invariantes estruturais e pela auditoria sistemática de `delete[]` em pós-ordem.

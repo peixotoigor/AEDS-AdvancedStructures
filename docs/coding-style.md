@@ -1,82 +1,75 @@
-# Estilo de Código
+# Estilo de Código — Árvore de Van Emde Boas (vEB Tree)
 
 ## Paradigma
 
-O Fibonacci Heap deve ser implementado com programação procedural estruturada,
-com foco didático e compatível com o nível de uma disciplina de graduação.
+A Árvore de Van Emde Boas deve ser implementada com programação procedural estruturada em C++20, com foco didático e clareza conceitual compatível com o nível de uma disciplina avançada de graduação.
 
-- Usar `struct` para representar nós e o heap.
-- Usar funções livres para todas as operações.
-- Evitar classes, herança, polimorfismo e padrões de projeto desnecessários.
-- Preferir controle de fluxo explícito e funções curtas.
-- Usar templates somente quando facilitarem a reutilização da implementação.
-- Escrever código que possa ser explicado linha a linha em uma apresentação.
+- Usar `struct` pura para representar a árvore de Van Emde Boas.
+- Usar funções livres puras para todas as operações.
+- Evitar classes com herança, polimorfismo ou encapsulamento excessivo que obscureça o fluxo de controle recursivo.
+- Preferir controle de fluxo explícito, funções enxutas e de responsabilidade única.
+- Escrever código que possa ser explicado linha a linha em uma apresentação acadêmica.
 
-## Arquivos
+## Arquivos e Organização
 
 ```text
 src/
 ├── core/
-│   ├── fibonacci_heap.cpp
-│   └── main.cpp
+│   ├── van_emde_boas.cpp         # Implementação das rotinas procedurais
+│   └── main.cpp                  # Demonstração simples e exemplos de uso
 └── include/
-    └── fibonacci_heap.hpp
+    └── van_emde_boas.hpp         # Structs, constantes e assinaturas de funções livres
 ```
 
-- `src/include/fibonacci_heap.hpp` deve conter os registros, declarações e
-  contratos públicos.
-- `src/core/fibonacci_heap.cpp` deve conter a implementação das operações.
-- `src/core/main.cpp` deve conter somente demonstrações pequenas e exemplos de
-  uso.
-- `tests/` deve conter os testes funcionais e as verificações de invariantes.
+- `src/include/van_emde_boas.hpp` deve conter as structs, constantes (`VEB_NIL = -1`), macros inline/constexpr de bits e contratos públicos.
+- `src/core/van_emde_boas.cpp` deve conter a implementação das operações algorítmicas.
+- `src/core/main.cpp` deve conter somente demonstrações pequenas e exemplos de uso.
+- `tests/` deve conter os testes funcionais, verificação de invariantes e testes com oráculos STL.
 
-Todo arquivo `.cpp` deve ficar em `src/core/`. Todo arquivo `.hpp` deve ficar
-em `src/include/`.
+Todo arquivo `.cpp` deve residir em `src/core/`. Todo arquivo `.hpp` deve residir em `src/include/`.
 
-## Registros sugeridos
+## Registros Sugeridos
 
 ```cpp
-struct NoFibonacci {
-    int chave;
-    int grau;
-    bool marcado;
-    NoFibonacci* pai;
-    NoFibonacci* filho;
-    NoFibonacci* esquerda;
-    NoFibonacci* direita;
-};
+#include <cstdint>
 
-struct HeapFibonacci {
-    NoFibonacci* minimo;
-    int quantidade;
+inline constexpr int64_t VEB_NIL = -1;
+
+struct VanEmdeBoas {
+    uint64_t u;                     // Tamanho do universo suportado (potência de 2)
+    int64_t min;                    // Menor elemento presente (ou VEB_NIL)
+    int64_t max;                    // Maior elemento presente (ou VEB_NIL)
+    VanEmdeBoas* summary;           // Ponteiro para subárvore de resumo (universo sqrt_up(u))
+    VanEmdeBoas** cluster;          // Array de sqrt_up(u) ponteiros para clusters (universo sqrt_down(u))
 };
 ```
 
-Os nomes podem variar se o código existente adotar outra convenção, mas o
-significado dos campos deve permanecer claro.
+O significado dos campos deve permanecer formal:
+- `u`: dimensão máxima do universo de chaves $[0, u - 1]$.
+- `min`: menor chave ativa, mantida estritamente fora dos clusters subordinados.
+- `max`: maior chave ativa.
+- `summary`: ponteiro nulo se $u = 2$; senão aponta para subárvore vEB de universo $\sqrt[\uparrow]{u}$.
+- `cluster`: ponteiro nulo se $u = 2$; senão aponta para vetor alocado dinamicamente com $\sqrt[\uparrow]{u}$ ponteiros para subárvores de universo $\sqrt[\downarrow]{u}$.
 
-## Ponteiros e memória
+## Ponteiros e Gerenciamento de Memória
 
-- A lista de raízes deve ser circular e duplamente encadeada.
-- Cada nó deve manter `esquerda` e `direita` consistentes.
-- Um nó sem pai é raiz; um nó com pai pertence à lista de filhos desse pai.
-- Toda alocação deve ocorrer em uma função de criação bem identificada.
-- Toda remoção deve liberar o nó somente depois de religar a estrutura.
-- A função de destruição deve liberar raízes, filhos e listas circulares
-  exatamente uma vez.
-- Após destruir o heap, `minimo` deve ser `nullptr` e `quantidade` deve ser
-  zero.
-- Não acessar ponteiros depois de `delete`.
+- Toda alocação recursiva de nós e vetores de ponteiros deve ocorrer na rotina `veb_criar(u)`.
+- Toda desalocação deve ocorrer em pós-ordem rigorosa em `veb_destruir(VanEmdeBoas*& V)`:
+  1. Desalocar recursivamente cada um dos $\sqrt[\uparrow]{u}$ clusters;
+  2. Liberar o array de ponteiros `delete[] V->cluster`;
+  3. Desalocar recursivamente o `summary`;
+  4. Liberar o nó raiz `delete V`;
+  5. Atribuir o ponteiro original a `nullptr`.
+- Não acessar ponteiros após `delete`.
 
-## Comentários
+## Comentários Técnicos
 
-Escrever comentários em português para explicar decisões não óbvias, como:
+Escrever comentários em português explicando decisões matemáticas não triviais, tais como:
 
-- inserção em uma lista circular;
-- consolidação de árvores após `extrair_minimo`;
-- corte e corte em cascata;
-- atualização dos ponteiros do pai e do filho;
-- motivo da marcação de um nó;
-- manutenção do menor elemento.
+- Otimizações bitwise para cálculo de `high`, `low` e `index` quando $u = 2^b$;
+- O motivo da não inserção de $min$ dentro dos clusters subordinados;
+- A garantia de que no máximo uma chamada recursiva ocorre durante `veb_inserir` e `veb_remover`;
+- A lógica de transição quando um cluster esvazia e requer exclusão no `summary`;
+- O tratamento de borda para o caso base $u = 2$.
 
-Não comentar atribuições óbvias nem repetir o código em linguagem natural.
+Evitar comentários redundantes que apenas parafraseiem atribuições óbvias.

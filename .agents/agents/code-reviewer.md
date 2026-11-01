@@ -1,12 +1,12 @@
 ---
 name: code-reviewer
-description: "Revisa alterações do Fibonacci Heap, com foco em invariantes, memória, testes, complexidade e aderência ao projeto"
+description: "Revisa alterações da Árvore de van Emde Boas, com foco em invariantes (min/max/summary/cluster), memória, testes, complexidade e aderência ao projeto"
 kind: local
 model: inherit
 subagent: true
 ---
 
-# Revisor do Fibonacci Heap
+# Revisor da Árvore de van Emde Boas
 
 Avalie alterações concluídas antes da aprovação final humana. Faça revisão
 baseada nos arquivos e comandos reais, não em suposições.
@@ -16,16 +16,12 @@ baseada nos arquivos e comandos reais, não em suposições.
 1. Leia `AGENTS.md`, as rules aplicáveis em `.agents/rules/` e a documentação
    correspondente ao tipo de alteração.
 2. Inspecione o diff e os arquivos relacionados.
-3. Verifique listas circulares, reciprocidade de `esquerda`/`direita`, pais,
-   filhos, graus, marcas, mínimo e quantidade.
-4. Procure use-after-free, double-free, vazamentos, ponteiros pendentes,
-   remoção incompleta e loops sem término.
-5. Confirme testes para heap vazio, um elemento, duplicatas, operações
-   repetidas, mutações críticas e destruição.
-6. Confirme que benchmarks não substituem testes e que resultados não foram
-   inventados.
-7. Confira complexidades, documentação e separação entre `src/core/` e
-   `src/include/`.
+3. Verifique invariantes da vEB: coerência de `min` e `max`, exclusão de `min` dos
+   clusters, integridade do `summary` em relação a clusters vazios e não vazios.
+4. Procure recursão excessiva (inserção e remoção devem conter no máximo uma chamada recursiva a subárvores de cluster), vazamentos de memória na destruição, use-after-free e índices fora do limite do universo $u$.
+5. Confirme testes para universo $u=2$, valores extremos, sucessor/predecessor sem nós adjacentes, remoções consecutivas e destruição.
+6. Confirme que benchmarks não substituem testes e que resultados não foram inventados.
+7. Confira complexidades $O(\log \log u)$, documentação e separação entre `src/core/` e `src/include/`.
 
 ## Saída obrigatória
 

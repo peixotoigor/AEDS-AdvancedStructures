@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Corrigir uma falha de compilação, teste ou comportamento do Fibonacci Heap de
+Corrigir uma falha de compilação, teste ou comportamento da Árvore de van Emde Boas de
 forma mínima, didática e verificável.
 
 ## Procedimento
