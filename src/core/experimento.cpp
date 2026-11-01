@@ -15,23 +15,14 @@
 using namespace std;
 using namespace std::chrono;
 
-
 const int SEMENTE = 42;
 
-
-// ---------------------------------------------------------------------
-// Funcoes auxiliares (usadas so neste arquivo)
-// ---------------------------------------------------------------------
-
-// Bytes que o programa tem alocados neste momento (new/malloc).
-// A memoria de um heap e a diferenca entre depois e antes de monta-lo.
 static long long bytes_em_uso(){
 
     struct mallinfo info = mallinfo();
 
     return (long long)info.uordblks + (long long)info.hblkhd;
 }
-
 
 // Poucas repeticoes para n grande (demora muito), mais para n pequeno (o timer e pouco preciso).
 static int repeticoes_para(int n){
@@ -198,12 +189,10 @@ static MetricasExecucao montar_resultado(const string& heap, const string& opera
 
 
 // Numero de arestas do grafo.
-// Se o seu metodo tiver outro nome, e so trocar aqui.
 static long long contar_arestas(const Grafo& g){
 
     return g.obter_num_arestas();
 }
-
 
 // h: 0 = binario, 1 = 4-ary, 2 = 8-ary, 3 = fibonacci
 static ResultadoDijkstra rodar_dijkstra(const Grafo& g, int origem, int h){
@@ -230,8 +219,8 @@ static ResultadoDijkstra rodar_dijkstra(const Grafo& g, int origem, int h){
 
 Experimento::Experimento(){
 
-    filesystem::create_directories("resultados");
-    ofstream arquivo("resultados/execucoes.csv");
+    filesystem::create_directories("results");
+    ofstream arquivo("results/execucoes.csv");
 
     arquivo << "heap,operacao,tipo_entrada,n,repeticoes,semente,"
             << "media_tempo_micro,desvio_micro,mediana_micro,micro_por_op,"
@@ -260,19 +249,19 @@ vector<int> Experimento::carregar_dados(const string& caminho){
 
 void Experimento::imprimir_resultado(const MetricasExecucao& m){
 
-    printf("  %-12s  %-11s  n=%-8d  %-10s %12.2f us  (+- %9.2f)  %.4f us/op  %s\n",
+    /*printf("  %-12s  %-11s  n=%-8d  %-10s %12.2f us  (+- %9.2f)  %.4f us/op  %s\n",
            m.operacao.c_str(), m.tipo_entrada.c_str(), m.n, m.heap.c_str(),
            m.tempo_micro, m.desvio_micro, m.micro_por_op, m.certo ? "ok" : "ERRO");
 
-    fflush(stdout);
+    fflush(stdout);*/
 }
 
 
 void Experimento::registrar_resultado(const MetricasExecucao& m){
 
-    imprimir_resultado(m);
+    //imprimir_resultado(m);
 
-    ofstream arquivo("resultados/execucoes.csv", ios::app);
+    ofstream arquivo("results/execucoes.csv", ios::app);
 
     arquivo << fixed << setprecision(4);
 
@@ -329,6 +318,9 @@ void Experimento::testar_insercao(const vector<int>& dados, const string& tipo, 
 
             if (execucao == 0){
                 memoria = bytes_em_uso() - antes;
+            }
+
+            if (execucao == repeticoes){
                 certo = conferir_esvaziando(*H, n, soma_esperada);
             }
 
@@ -349,8 +341,12 @@ void Experimento::testar_insercao(const vector<int>& dados, const string& tipo, 
             auto fim = steady_clock::now();
             tempo = micros(inicio, fim);
 
+
             if (execucao == 0){
                 memoria = bytes_em_uso() - antes;
+            }
+
+            if (execucao == repeticoes){
                 certo = conferir_esvaziando(*H, n, soma_esperada);
             }
 
@@ -469,15 +465,6 @@ void Experimento::testar_extract_min(const vector<int>& dados, const string& tip
     registrar_resultado(resultado);
 }
 
-
-// Como o DECREASE-KEY e medido:
-//  1) o no 0 entra com a menor chave possivel (INT_MIN) e e extraido antes de medir.
-//     Isso obriga o Fibonacci a consolidar as arvores; sem isso todos os nos seriam
-//     raizes e o DECREASE-KEY nunca precisaria cortar nada.
-//  2) cada operacao diminui de verdade a chave ATUAL do no (o tamanho da diminuicao
-//     e proporcional a faixa de valores, entao e parecido para qualquer n).
-//  3) a sequencia de operacoes e a mesma para os 4 heaps (mesma semente).
-//  4) no fim, o heap e esvaziado conferindo a ordem e a soma das chaves.
 void Experimento::testar_decrease_key(const vector<int>& dados, const string& tipo, const string& heap, int d){
 
     int n = dados.size();
@@ -556,8 +543,12 @@ void Experimento::testar_decrease_key(const vector<int>& dados, const string& ti
             auto fim = steady_clock::now();
             tempo = micros(inicio, fim);
 
-            if (execucao == 0){
-                certo = ok && conferir_esvaziando(*H, n - 1, soma_esperada);
+            if (!ok){
+                certo = false;
+            }
+
+            if (execucao == repeticoes){
+                certo = certo && conferir_esvaziando(*H, n - 1, soma_esperada);
             }
 
             delete H;
@@ -584,8 +575,12 @@ void Experimento::testar_decrease_key(const vector<int>& dados, const string& ti
             auto fim = steady_clock::now();
             tempo = micros(inicio, fim);
 
-            if (execucao == 0){
-                certo = ok && conferir_esvaziando(*H, n - 1, soma_esperada);
+            if (!ok){
+                certo = false;
+            }
+
+            if (execucao == repeticoes){
+                certo = certo && conferir_esvaziando(*H, n - 1, soma_esperada);
             }
 
             delete H;
@@ -611,12 +606,11 @@ void Experimento::testar_dijkstra(){
         string tipo;
     };
 
-    // Para testar mais grafos, e so acrescentar linhas nesta lista.
     vector<Entrada> entradas = {{"data/grafo_esparso.dat", "esparso"},{"data/grafo_denso.dat", "denso"}};
 
     string nomes[4] = {"binario", "4-ary", "8-ary", "fibonacci"};
 
-    printf("== DIJKSTRA ==\n");
+    //printf("== DIJKSTRA ==\n");
 
     for (const auto& entrada : entradas){
 
@@ -626,7 +620,7 @@ void Experimento::testar_dijkstra(){
         int n = g.obter_num_vertices();
         long long m = contar_arestas(g);
 
-        printf("  grafo %s: V=%d E=%lld densidade m/V=%.1f\n", entrada.tipo.c_str(), n, m, (double)m / n);
+        //printf("  grafo %s: V=%d E=%lld densidade m/V=%.1f\n", entrada.tipo.c_str(), n, m, (double)m / n);
 
         // resultado de referencia: heap binario
         ResultadoDijkstra referencia = dijkstra_heap_dario(g, origem, 2);
@@ -669,8 +663,6 @@ void Experimento::testar_dijkstra(){
     }
 }
 
-
-
 void Experimento::testar_heaps(){
 
     struct Entrada {
@@ -703,7 +695,7 @@ void Experimento::testar_heaps(){
 
             vector<int> dados(dados_completos.begin(),dados_completos.begin() + tamanho);
 
-            printf("== %s n=%d ==\n", entrada.tipo.c_str(), tamanho);
+            //printf("== %s n=%d ==\n", entrada.tipo.c_str(), tamanho);
 
             // a ordem dos heaps muda a cada tamanho (evita favorecer quem roda primeiro)
             for (int j = 0; j < 4; j++){

@@ -59,6 +59,10 @@ HeapDArio::~HeapDArio() {}
 void HeapDArio::insert(int chave, int valor) {
     vetor.push_back(NoDario(chave, valor));
     int indice_atual = vetor.size() - 1;
+
+    if (valor >= (int)posicao.size()) {
+        posicao.resize(valor + 1, -1);
+    }
     
     posicao[valor] = indice_atual;
     heapify_up(indice_atual);
@@ -78,7 +82,7 @@ HeapDArio::NoDario HeapDArio::extract_min() {
     }
     
     NoDario min_node = vetor[0];
-    posicao.erase(min_node.valor);
+    posicao[min_node.valor] = -1;
 
     if (vetor.size() > 1) {
         vetor[0] = vetor.back();
@@ -93,7 +97,7 @@ HeapDArio::NoDario HeapDArio::extract_min() {
 }
 
 void HeapDArio::decrease_key(int valor, int chave_nova) {
-    if (posicao.find(valor) == posicao.end()) {
+    if (valor < 0 || valor >= (int)posicao.size() || posicao[valor] == -1) {
         return;
     }
 
@@ -107,7 +111,7 @@ void HeapDArio::decrease_key(int valor, int chave_nova) {
 }
 
 HeapDArio::NoDario HeapDArio::delete_no(int valor) {
-    if (posicao.find(valor) == posicao.end()) {
+        if (valor < 0 || valor >= (int)posicao.size() || posicao[valor] == -1) {
         throw runtime_error("Valor não encontrado");
     }
 
@@ -121,6 +125,7 @@ HeapDArio* HeapDArio::union_heaps(HeapDArio& H1, HeapDArio& H2) {
     }
 
     HeapDArio* H = new HeapDArio(H1.d);
+    H->posicao.resize(max(H1.posicao.size(), H2.posicao.size()), -1);
     
     if (H1.esta_vazio() && H2.esta_vazio()) return H;
 
@@ -136,7 +141,7 @@ HeapDArio* HeapDArio::union_heaps(HeapDArio& H1, HeapDArio& H2) {
     }
 
     int n = H->vetor.size();
-    for (int i = (n / H1.d) - 1; i >= 0; i--) {
+    for (int i = (n - 2) / H1.d; i >= 0; i--) { 
         H->heapify_down(i);
     }
 

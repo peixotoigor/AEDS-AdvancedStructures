@@ -2,7 +2,6 @@
 #define HEAP_DARIO_HPP
 
 #include <vector>
-#include <unordered_map>
 #include <stdexcept>
 
 class HeapDArio {
@@ -15,7 +14,7 @@ class HeapDArio {
 
     private:
         std::vector<NoDario> vetor;
-        std::unordered_map<int, int> posicao;
+        std::vector<int> posicao;   // posicao[valor] = indice no vetor, ou -1 se o valor nao esta no heap
         int d; // grau de aridade do heap 
 
         int pai(int indiceFilho) const;
