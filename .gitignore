@@ -22,4 +22,8 @@ venv/
 testar_binario
 testar_binario_dados
 testar_leitor
+executar_experimentos
+experimento
+gerar_dados
+testar_dijkstra
 
