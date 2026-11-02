@@ -131,8 +131,7 @@ g++ -O3 -std=c++20 -I src/include src/benchmark_estudo2_cenario2.cpp src/core/di
 │   ├── *.pdf                # Gráficos vetoriais de alta resolução para o relatório
 │   └── *.csv                # Dados tabulados com médias e desvios padrão (10 repetições)
 ├── report/                  # Relatório Experimental ABNT
-│   ├── relatorio_experimental.pdf   # Documento final formatado (26 páginas)
-│   └── relatorio_experimental.tex   # Código-fonte LaTeX compilável
+│   ├── fibonacci_Emde_boas.pdf   # Documento final formatado (26 páginas)
 ├── scripts/                 # Scripts Python de geração dos gráficos
 ├── build.sh                 # Script de compilação e execução para Linux/macOS
 ├── build.bat                # Script de compilação e execução para Windows
@@ -140,3 +139,7 @@ g++ -O3 -std=c++20 -I src/include src/benchmark_estudo2_cenario2.cpp src/core/di
 ```
 
 ---
+## 📄 Relatório Experimental
+
+O relatório técnico completo em padrão ABNT encontra-se disponível em:
+- **PDF do Relatório:** [`report/fibonacci_Emde_boas.pdf`](report/fibonacci_Emde_boas.pdf)

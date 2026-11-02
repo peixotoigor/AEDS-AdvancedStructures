@@ -27,10 +27,8 @@ experimento
 gerar_dados
 testar_dijkstra
 
-# LaTeX temporários
-report/*.aux
-report/*.log
-report/*.out
-report/*.toc
-report/*.synctex.gz
+# Na pasta report, enviar exclusivamente fibonacci_Emde_boas.pdf
+report/*
+!report/fibonacci_Emde_boas.pdf
+
 medir_memoria_valgrind
