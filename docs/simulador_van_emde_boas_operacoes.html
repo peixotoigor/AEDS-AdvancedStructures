@@ -1,0 +1,1847 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Construtor de van Emde Boas — CLRS Canônico (Cap. 20)</title>
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bar-bg: #FAFAFA;
+  --surface: #F8FAFC;
+  --surface-2: #F1F5F9;
+  --ink: #111827;
+  --ink-2: #374151;
+  --mu: #6B7280;
+  --nil: #9CA3AF;
+  --bd: #D1D5DB;
+  --bd-light: #E5E7EB;
+  --active-bg: #FFFBEB;
+  --active-head: #FEF3C7;
+  --active-ring: rgba(245, 158, 11, 0.28);
+  --active-accent: #D97706;
+  --err-bg: #FEF2F2;
+  --err-bd: #EF4444;
+  --err-ink: #991B1B;
+  --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.05);
+  --shadow-md: 0 4px 12px rgba(17, 24, 39, 0.08);
+  --shadow-balloon: 0 14px 32px rgba(17, 24, 39, 0.16), 0 2px 6px rgba(17, 24, 39, 0.08);
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 13px/1.4 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   1. CABEÇALHO ÚNICO ENXUTO DE CONSTRUÇÃO (#top-header)
+   ========================================================================== */
+#top-header {
+  background: var(--bar-bg);
+  border-bottom: 1px solid var(--bd);
+  padding: 10px 18px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-main-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+}
+
+.brand-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-group h1 {
+  margin: 0;
+  font: 700 15.5px/1.2 var(--sans);
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+
+.clrs-badge {
+  font: 700 10px var(--mono);
+  background: var(--ink);
+  color: #FFFFFF;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.toolbar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.ctrl-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  padding: 3px 8px;
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+}
+
+.ctrl-pill label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+input[type="number"], select {
+  width: 58px;
+  padding: 4px 6px;
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--ink);
+  font: 600 12px var(--mono);
+}
+
+select {
+  width: auto;
+  font-family: var(--sans);
+  cursor: pointer;
+}
+
+input[type="number"]:focus, select:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+
+button {
+  border: 1px solid var(--bd);
+  border-radius: 5px;
+  padding: 4px 9px;
+  font: 600 11.5px var(--sans);
+  color: var(--ink);
+  background: var(--bg);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, transform 0.06s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+button:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: var(--ink-2);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+button.btn-dark {
+  background: var(--ink);
+  color: #FFFFFF;
+  border-color: var(--ink);
+}
+
+button.btn-dark:hover:not(:disabled) {
+  background: var(--ink-2);
+  border-color: var(--ink-2);
+}
+
+.step-compact-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg);
+  padding: 3px 7px;
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+}
+
+.step-compact-group button {
+  padding: 3px 7px;
+  font-size: 11px;
+}
+
+.step-badge {
+  font: 700 11px var(--mono);
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  min-width: 74px;
+  text-align: center;
+}
+
+.step-badge.active {
+  background: var(--active-head);
+  color: #92400E;
+}
+
+.chk-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+/* Linha 2 do Cabeçalho: Régua de Construção Rápida + Status */
+.header-ruler-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--bd-light);
+}
+
+.ruler-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.ruler-lbl {
+  font: 700 11px var(--sans);
+  color: var(--ink-2);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.univ-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.u-cell {
+  min-width: 28px;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--nil);
+  font: 700 11.5px var(--mono);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.1s;
+}
+
+.u-cell:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.u-cell.present {
+  background: var(--ink);
+  color: #FFFFFF;
+  border-color: var(--ink);
+}
+
+.u-cell.queried {
+  box-shadow: 0 0 0 3px var(--active-ring);
+  border-color: var(--active-accent);
+}
+
+#status-banner {
+  font-size: 12px;
+  color: var(--ink-2);
+  background: var(--bg);
+  border: 1px solid var(--bd-light);
+  border-radius: 5px;
+  padding: 4px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+#status-banner.status-warn {
+  background: var(--err-bg);
+  border-color: var(--err-bd);
+  color: var(--err-ink);
+}
+
+/* ==========================================================================
+   2. ÁREA PRINCIPAL 100% DEDICADA À ÁRVORE (#tree-viewport)
+   ========================================================================== */
+#main-workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px 20px;
+  background: var(--bg);
+}
+
+#tree-viewport {
+  flex: 1;
+  width: 100%;
+  min-height: calc(100vh - 135px);
+  overflow: auto;
+  background: var(--bg);
+  border: 1px solid var(--bd-light);
+  border-radius: 8px;
+  padding: 52px 20px 40px;
+  position: relative;
+}
+
+/* Barra superior flutuante discreta dentro do canvas */
+.canvas-overlay-bar {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.canvas-info-pill {
+  pointer-events: auto;
+  background: rgba(248, 250, 252, 0.92);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--bd-light);
+  border-radius: 5px;
+  padding: 4px 10px;
+  font: 600 11.5px var(--mono);
+  color: var(--ink-2);
+}
+
+.canvas-zoom-controls {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 3px 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+.canvas-zoom-controls button {
+  padding: 2px 7px;
+  font-size: 11px;
+}
+
+.zoom-lbl {
+  font: 700 11px var(--mono);
+  min-width: 38px;
+  text-align: center;
+  color: var(--ink);
+}
+
+#tree-scale-wrapper {
+  margin: 0 auto;
+  position: relative;
+}
+
+#tree-canvas {
+  position: relative;
+  transform-origin: top left;
+  transition: transform 0.14s ease;
+}
+
+#tree-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+.svg-edge {
+  fill: none;
+  stroke: #CBD5E1;
+  stroke-width: 1.5px;
+  transition: stroke 0.18s, stroke-width 0.18s;
+}
+
+.svg-edge.edge-summary {
+  stroke-dasharray: 4 3;
+  stroke: #94A3B8;
+}
+
+.svg-edge.edge-populated {
+  stroke: #475569;
+  stroke-width: 1.75px;
+}
+
+.svg-edge.edge-active {
+  stroke: var(--ink);
+  stroke-width: 2.8px;
+  stroke-dasharray: none;
+}
+
+/* ==========================================================================
+   3. ANATOMIA EXATA DO NÓ vEB CANÔNICO CLRS (U | min | max + S | 0..√↑U-1)
+   ========================================================================== */
+.veb-node {
+  position: absolute;
+  z-index: 2;
+  background: var(--bg);
+  border: 1.5px solid var(--ink-2);
+  border-radius: 5px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.12s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.veb-node:hover {
+  border-color: var(--ink);
+  box-shadow: var(--shadow-md);
+}
+
+.veb-node.node-empty {
+  border-color: #CBD5E1;
+  color: var(--nil);
+}
+
+.veb-node.node-filled {
+  border-color: var(--ink);
+}
+
+.veb-node.node-ancestor {
+  border-color: var(--active-accent);
+}
+
+.veb-node.node-active {
+  border: 2px solid var(--ink);
+  background: var(--active-bg);
+  box-shadow: 0 0 0 4px var(--active-ring), var(--shadow-md);
+  z-index: 10;
+}
+
+.node-role-tag {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 600 10px/1 var(--sans);
+  color: var(--mu);
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.veb-node.node-filled .node-role-tag {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.veb-node.node-active .node-role-tag {
+  background: var(--ink);
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+
+/* Linha Superior: U | min | max */
+.node-top-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--bd);
+}
+
+.veb-node.leaf-node .node-top-row {
+  border-bottom: none;
+}
+
+.node-attr-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 5px;
+  border-right: 1px solid var(--bd-light);
+  min-width: 28px;
+}
+
+.node-attr-cell:last-child {
+  border-right: none;
+}
+
+.attr-lbl {
+  font: 600 8.5px/1 var(--sans);
+  text-transform: uppercase;
+  color: var(--mu);
+  margin-bottom: 2px;
+}
+
+.attr-val {
+  font: 700 12px/1.1 var(--mono);
+  color: var(--ink);
+}
+
+.veb-node.node-empty .attr-val.val-minmax {
+  color: var(--nil);
+  font-weight: 500;
+}
+
+.veb-node.node-filled .attr-val.val-minmax {
+  color: var(--ink);
+  background: var(--surface-2);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.veb-node.node-active .attr-val.val-minmax {
+  background: var(--active-head);
+  color: var(--ink);
+}
+
+/* Linha Inferior (U > 2): S | 0 | 1 | ... | √↑U - 1 */
+.node-ptr-row {
+  display: grid;
+  background: var(--surface);
+  border-radius: 0 0 4px 4px;
+}
+
+.ptr-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 2px 5px;
+  border-right: 1px solid var(--bd-light);
+  font: 700 10px/1 var(--mono);
+  color: var(--ink-2);
+  position: relative;
+}
+
+.ptr-cell:last-child {
+  border-right: none;
+}
+
+.ptr-cell.ptr-summary {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.ptr-cell.ptr-active {
+  background: var(--active-head);
+  color: var(--ink);
+}
+
+.ptr-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #94A3B8;
+  margin-top: 3px;
+}
+
+.ptr-cell.ptr-populated .ptr-dot {
+  background: var(--ink);
+}
+
+/* ==========================================================================
+   4. BALÃO FLUTUANTE COMPACTO (#floating-balloon)
+   ========================================================================== */
+#floating-balloon {
+  position: fixed;
+  z-index: 1000;
+  width: min(350px, calc(100vw - 24px));
+  background: #FFFFFF;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow-balloon);
+  display: none;
+  opacity: 0;
+  transition: top 0.16s cubic-bezier(0.22, 1, 0.36, 1), left 0.16s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.12s ease;
+}
+
+#floating-balloon.visible {
+  display: block;
+  opacity: 1;
+}
+
+#balloon-arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #FFFFFF;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+#floating-balloon[data-pos="bottom"] #balloon-arrow {
+  top: -7px;
+  border-left: 2px solid var(--ink);
+  border-top: 2px solid var(--ink);
+}
+
+#floating-balloon[data-pos="top"] #balloon-arrow {
+  bottom: -7px;
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+.fb-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-bottom: 5px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--bd-light);
+}
+
+.fb-tag {
+  background: var(--active-head);
+  color: #92400E;
+  border: 1px solid #F59E0B;
+  font: 700 9.5px var(--sans);
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.fb-node-path {
+  font: 700 10.5px var(--mono);
+  color: var(--ink-2);
+}
+
+.fb-close {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 10px;
+}
+
+.fb-title {
+  font: 700 12.5px/1.3 var(--sans);
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.fb-desc {
+  font-size: 11.5px;
+  color: var(--ink-2);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.fb-formula {
+  background: var(--surface);
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  padding: 5px 7px;
+  font: 600 10.5px/1.4 var(--mono);
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.fb-delta {
+  background: var(--active-bg);
+  border-left: 3px solid var(--active-accent);
+  padding: 4px 7px;
+  font: 700 10.5px var(--mono);
+  color: var(--ink);
+}
+</style>
+</head>
+<body>
+
+<!-- 1. CABEÇALHO ÚNICO ENXUTO (SOMENTE CONSTRUÇÃO CANÔNICA CLRS) -->
+<header id="top-header">
+  <div class="header-main-row">
+    <div class="brand-group">
+      <h1>Construtor van Emde Boas</h1>
+      <span class="clrs-badge">CLRS CAP. 20</span>
+    </div>
+
+    <div class="toolbar-controls">
+      <!-- Seletor de Universo -->
+      <div class="ctrl-pill">
+        <label for="inp-u">Universo:</label>
+        <select id="inp-u">
+          <option value="4">U = 4</option>
+          <option value="8" selected>U = 8</option>
+          <option value="16">U = 16</option>
+          <option value="32">U = 32</option>
+        </select>
+        <button id="btn-new-tree">Nova Árvore Vazia</button>
+      </div>
+
+      <!-- Inserção Direta (vEB-TREE-INSERT) -->
+      <div class="ctrl-pill">
+        <label for="inp-ins">Chave:</label>
+        <input id="inp-ins" type="number" min="0" max="31" value="5">
+        <button id="btn-ins" class="btn-dark">Inserir na Árvore</button>
+      </div>
+
+
+      <!-- Operações de consulta e atualização vEB -->
+      <div class="ctrl-pill">
+        <label for="sel-op">Operação:</label>
+        <select id="sel-op">
+          <option value="buscar">Buscar</option><option value="min">Mínimo</option>
+          <option value="max">Máximo</option><option value="sucessor">Sucessor</option>
+          <option value="predecessor">Predecessor</option><option value="remover">Remover</option>
+        </select>
+        <label for="inp-op">x:</label><input id="inp-op" type="number" min="0" max="7" value="3">
+        <button id="btn-op">Executar</button>
+      </div>
+
+      <!-- Presets de Construção -->
+      <button id="btn-preset-8" title="Constrói U=8 com {2, 3, 5, 7}">Preset U=8 {2, 3, 5, 7}</button>
+      <button id="btn-preset-16" title="Constrói a Figura 20.6 do CLRS: U=16 com {2, 3, 4, 5, 7, 14, 15}">Preset U=16 (CLRS Fig. 20.6)</button>
+
+      <!-- Navegação Compacta dos Passos de Construção -->
+      <div class="step-compact-group">
+        <button id="btn-first" title="Primeiro passo">⏮</button>
+        <button id="btn-prev" title="Passo anterior (←)">◀</button>
+        <span class="step-badge" id="step-counter-badge">Passo 0/0</span>
+        <button id="btn-next" class="btn-dark" title="Próximo passo (→)">▶</button>
+        <button id="btn-last" title="Último passo">⏭</button>
+        <button id="btn-play" title="Reproduzir / Pausar construção">⏯ Auto</button>
+        <label class="chk-label" title="Exibir explicação sobre o nó ativo">
+          <input type="checkbox" id="chk-balloon" checked> Balão no nó
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Régua Integrada de Construção Rápida (Clique para Inserir / Remover da construção) -->
+  <div class="header-ruler-row">
+    <div class="ruler-wrap">
+      <span class="ruler-lbl">Construção Rápida <code id="univ-range-lbl">[0..7]</code>:</span>
+      <div class="univ-strip" id="univ-strip"></div>
+    </div>
+    <div id="status-banner">Clique em qualquer número acima ou digite uma chave para construir a árvore.</div>
+  </div>
+</header>
+
+<!-- 2. ÁREA PRINCIPAL 100% DEDICADA À ÁRVORE HIERÁRQUICA -->
+<main id="main-workspace">
+  <div id="tree-viewport">
+    <div class="canvas-overlay-bar">
+      <div class="canvas-info-pill" id="canonical-root-summary"></div>
+      <div class="canvas-zoom-controls">
+        <button id="btn-zoom-out" title="Diminuir zoom">−</button>
+        <span class="zoom-lbl" id="zoom-lbl">100%</span>
+        <button id="btn-zoom-in" title="Aumentar zoom">+</button>
+        <button id="btn-zoom-reset" title="Zoom 100%">100%</button>
+        <button id="btn-zoom-fit" class="btn-dark" title="Ajustar árvore à tela">Ajustar</button>
+      </div>
+    </div>
+
+    <div id="tree-scale-wrapper">
+      <div id="tree-canvas">
+        <svg id="tree-svg"></svg>
+        <div id="tree-nodes-layer"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- 3. BALÃO FLUTUANTE COMPACTO (#floating-balloon) -->
+<div id="floating-balloon" data-pos="bottom" role="dialog" aria-live="polite">
+  <div id="balloon-arrow"></div>
+  <div class="fb-top">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <span class="fb-tag" id="fb-tag">CONSTRUÇÃO</span>
+      <span class="fb-node-path" id="fb-path">Raiz (U=8)</span>
+    </div>
+    <button class="fb-close" id="fb-close" title="Fechar (Esc)">✕</button>
+  </div>
+  <div class="fb-title" id="fb-title"></div>
+  <div class="fb-desc" id="fb-desc"></div>
+  <div class="fb-formula" id="fb-formula" style="display:none"></div>
+  <div class="fb-delta" id="fb-delta" style="display:none"></div>
+</div>
+
+<script>
+/* ==========================================================================
+   1. MATEMÁTICA 100% CANÔNICA CLRS (CAPÍTULO 20)
+   ========================================================================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// √↑u = 2^(⌈lg(u)/2⌉) -> número de clusters e tamanho U do Sumário
+function upperSqrt(u) {
+  const lg = Math.round(Math.log2(u));
+  return Math.pow(2, Math.ceil(lg / 2));
+}
+
+// √↓u = 2^(⌊lg(u)/2⌋) -> tamanho U de cada Cluster e divisor de high/low/index
+function lowerSqrt(u) {
+  const lg = Math.round(Math.log2(u));
+  return Math.pow(2, Math.floor(lg / 2));
+}
+
+// high(x) = ⌊x / √↓u⌋
+function high(x, u) {
+  return Math.floor(x / lowerSqrt(u));
+}
+
+// low(x) = x mod √↓u
+function low(x, u) {
+  return x % lowerSqrt(u);
+}
+
+// index(x, y) = x · √↓u + y
+function index(x, y, u) {
+  return x * lowerSqrt(u) + y;
+}
+
+function makeFormulaText(u, x) {
+  if (u <= 2 || x === null || x === undefined || x < 0) return null;
+  const up = upperSqrt(u);
+  const lo = lowerSqrt(u);
+  const h = high(x, u);
+  const l = low(x, u);
+  return `√↑${u}=${up}, √↓${u}=${lo} │ high(${x})=⌊${x}/${lo}⌋=${h} (Cluster [${h}]) │ low(${x})=${x} mod ${lo}=${l}`;
+}
+
+/* ==========================================================================
+   2. ESTRUTURA E ALGORITMO DE CONSTRUÇÃO (vEB-TREE-INSERT)
+   ========================================================================== */
+let nextNodeId = 1;
+let rootTree = null;
+let universeSize = 8;
+let insertedKeysOrder = []; // Mantém as chaves inseridas para reconstrução rápida na régua
+let currentZoom = 1;
+
+let flatSteps = [];
+let currentStepIdx = -1;
+let playTimer = null;
+let balloonHiddenManually = false;
+
+// Constrói a estrutura vazia pré-alocada segundo o modelo canônico CLRS
+function buildFullVebTree(u, role = 'Raiz', path = 'Raiz', depth = 0, parentId = null, slotFromParent = null) {
+  const id = nextNodeId++;
+  const node = {
+    id,
+    u,
+    min: -1,
+    max: -1,
+    role,
+    path,
+    depth,
+    parentId,
+    slotFromParent,
+    sumario: null,
+    clusters: []
+  };
+
+  if (u > 2) {
+    const up = upperSqrt(u);
+    const lo = lowerSqrt(u);
+    node.sumario = buildFullVebTree(up, 'Sumário', `${path} → Sumário`, depth + 1, id, 'S');
+    for (let i = 0; i < up; i++) {
+      node.clusters.push(
+        buildFullVebTree(lo, `Cluster [${i}]`, `${path} → Cluster[${i}]`, depth + 1, id, i)
+      );
+    }
+  }
+  return node;
+}
+
+function cloneVebTree(node) {
+  if (!node) return null;
+  return {
+    id: node.id,
+    u: node.u,
+    min: node.min,
+    max: node.max,
+    role: node.role,
+    path: node.path,
+    depth: node.depth,
+    parentId: node.parentId,
+    slotFromParent: node.slotFromParent,
+    sumario: cloneVebTree(node.sumario),
+    clusters: node.clusters.map(cloneVebTree)
+  };
+}
+
+function findNodeById(node, id) {
+  if (!node) return null;
+  if (node.id === id) return node;
+  if (node.sumario) {
+    const f = findNodeById(node.sumario, id);
+    if (f) return f;
+  }
+  for (const c of node.clusters) {
+    const f = findNodeById(c, id);
+    if (f) return f;
+  }
+  return null;
+}
+
+function getAncestorIds(tree, targetId) {
+  const set = new Set();
+  let cur = findNodeById(tree, targetId);
+  while (cur && cur.parentId) {
+    set.add(cur.parentId);
+    cur = findNodeById(tree, cur.parentId);
+  }
+  return set;
+}
+
+function getPresentElements(tree) {
+  const res = new Set();
+  function check(V, x) {
+    if (!V || V.min === -1 || x < V.min || x > V.max) return false;
+    if (x === V.min || x === V.max) return true;
+    if (V.u <= 2) return false;
+    const h = high(x, V.u);
+    const l = low(x, V.u);
+    if (!V.clusters[h]) return false;
+    return check(V.clusters[h], l);
+  }
+  for (let i = 0; i < tree.u; i++) {
+    if (check(tree, i)) res.add(i);
+  }
+  return res;
+}
+
+function recordStep(opTitle, queriedKey, opts) {
+  flatSteps.push({
+    globalIdx: flatSteps.length,
+    opTitle,
+    queriedKey,
+    nodeId: opts.node.id,
+    nodePath: opts.node.path,
+    nodeU: opts.node.u,
+    activeSlot: opts.activeSlot !== undefined ? opts.activeSlot : null,
+    tag: opts.tag || 'CONSTRUÇÃO',
+    title: opts.title,
+    text: opts.text,
+    formula: opts.formula || null,
+    delta: opts.delta || null,
+    snapshot: cloneVebTree(rootTree)
+  });
+}
+
+// vEB-EMPTY-TREE-INSERT(V, x)
+function vebEmptyTreeInsert(V, x, opTitle, queriedKey, customTag = 'vEB-EMPTY-TREE-INSERT O(1)') {
+  const oldMin = V.min, oldMax = V.max;
+  V.min = x;
+  V.max = x;
+  recordStep(opTitle, queriedKey, {
+    node: V,
+    tag: customTag,
+    title: `Nó vazio (min = -1) → Define min = ${x} e max = ${x} em O(1)`,
+    text: `O nó ${V.role} (U=${V.u}) estava vazio. Armazena min = ${x} e max = ${x} diretamente sem descer mais níveis.`,
+    delta: `min: ${oldMin} → ${x}  |  max: ${oldMax} → ${x}`
+  });
+}
+
+// vEB-TREE-INSERT(V, x)
+function opInserir(V, x, opTitle, queriedKey) {
+  if (V.min === -1) {
+    vebEmptyTreeInsert(V, x, opTitle, queriedKey, 'vEB-EMPTY-TREE-INSERT O(1)');
+    return;
+  }
+
+  if (x === V.min || x === V.max) {
+    recordStep(opTitle, queriedKey, {
+      node: V,
+      tag: 'CHAVE JÁ PRESENTE',
+      title: `Chave ${x} já consta em min/max deste nó`,
+      text: `A chave (${x}) já está armazenada no cabeçalho de ${V.role} (min = ${V.min}, max = ${V.max}).`,
+      delta: `Sem alteração`
+    });
+    return;
+  }
+
+  if (x < V.min) {
+    const oldMin = V.min;
+    V.min = x;
+    recordStep(opTitle, queriedKey, {
+      node: V,
+      tag: 'SWAP (x ↔ V.min)',
+      title: `x (${x}) < V.min (${oldMin}) → Novo min vira ${x} e ${oldMin} desce`,
+      text: `Como ${x} é menor que o min atual (${oldMin}), ${x} assume V.min e o antigo min (${oldMin}) passa a ser inserido no cluster correspondente.`,
+      delta: `min: ${oldMin} → ${x}  |  chave que desce: x ← ${oldMin}`,
+      formula: makeFormulaText(V.u, oldMin)
+    });
+    x = oldMin;
+  }
+
+  if (V.u > 2) {
+    const h = high(x, V.u);
+    const l = low(x, V.u);
+    const clusterAlvo = V.clusters[h];
+
+    recordStep(opTitle, queriedKey, {
+      node: V,
+      activeSlot: h,
+      tag: 'DECOMPOSIÇÃO HIGH / LOW',
+      title: `Calcula high(${x}) = ${h} (Cluster [${h}]) e low(${x}) = ${l}`,
+      text: `No universo U=${V.u} (√↑u=${upperSqrt(V.u)}, √↓u=${lowerSqrt(V.u)}), direciona a inserção para o Cluster [${h}] com offset interno low(${x}) = ${l}.`,
+      formula: makeFormulaText(V.u, x),
+      delta: `Ponteiro acionado: Cluster [${h}]`
+    });
+
+    if (clusterAlvo.min === -1) {
+      recordStep(opTitle, queriedKey, {
+        node: V,
+        activeSlot: 'S',
+        tag: 'CLUSTER VAZIO → SUMÁRIO',
+        title: `Cluster [${h}] está vazio → Registra ${h} no Sumário (S)`,
+        text: `Como o Cluster [${h}] estava vazio (min = -1), insere recursivamente o índice ${h} no Sumário (U=${V.sumario.u}).`,
+        formula: makeFormulaText(V.u, x),
+        delta: `Ponteiro acionado: Sumário (S) ← ${h}`
+      });
+
+      opInserir(V.sumario, h, opTitle, queriedKey);
+      vebEmptyTreeInsert(clusterAlvo, l, opTitle, queriedKey, 'INSERÇÃO O(1) NO CLUSTER');
+    } else {
+      opInserir(clusterAlvo, l, opTitle, queriedKey);
+    }
+  }
+
+  if (x > V.max) {
+    const oldMax = V.max;
+    V.max = x;
+    recordStep(opTitle, queriedKey, {
+      node: V,
+      tag: 'ATUALIZA V.max',
+      title: `x (${x}) > V.max (${oldMax}) → Atualiza max para ${x}`,
+      text: `Atualiza o limite superior V.max de ${V.role} para ${x}.`,
+      delta: `max: ${oldMax} → ${x}`
+    });
+  }
+}
+
+/* ==========================================================================
+   3. LAYOUT HIERÁRQUICO CANÔNICO + RENDERIZAÇÃO SVG E NÓS
+   ========================================================================== */
+function computeNodeBoxWidth(u) {
+  if (u <= 2) return 86;
+  const up = upperSqrt(u);
+  const cols = up + 1;
+  return Math.max(96, cols * 24 + 8);
+}
+
+const NODE_HEIGHT_INTERNAL = 62;
+const NODE_HEIGHT_LEAF = 38;
+const LEVEL_GAP_Y = 76;
+const SIBLING_GAP_X = 14;
+
+function computeTreeLayout(node) {
+  const selfW = computeNodeBoxWidth(node.u);
+  if (node.u <= 2) {
+    node.boxW = selfW;
+    node.boxH = NODE_HEIGHT_LEAF;
+    node.subtreeW = selfW;
+    return node.subtreeW;
+  }
+  node.boxW = selfW;
+  node.boxH = NODE_HEIGHT_INTERNAL;
+  const children = [node.sumario, ...node.clusters];
+  let totalChildrenW = 0;
+  children.forEach((ch, idx) => {
+    totalChildrenW += computeTreeLayout(ch);
+    if (idx > 0) totalChildrenW += SIBLING_GAP_X;
+  });
+  node.subtreeW = Math.max(selfW, totalChildrenW);
+  return node.subtreeW;
+}
+
+function assignCoordinates(node, leftX, topY) {
+  node.x = leftX + (node.subtreeW - node.boxW) / 2;
+  node.y = topY;
+
+  if (node.u > 2) {
+    const children = [node.sumario, ...node.clusters];
+    const totalChildrenW = children.reduce((acc, c) => acc + c.subtreeW, 0) + SIBLING_GAP_X * (children.length - 1);
+    let curX = leftX + (node.subtreeW - totalChildrenW) / 2;
+    const nextY = topY + node.boxH + LEVEL_GAP_Y;
+    for (const ch of children) {
+      assignCoordinates(ch, curX, nextY);
+      curX += ch.subtreeW + SIBLING_GAP_X;
+    }
+  }
+}
+
+function getMaxDepthBottom(node) {
+  if (node.u <= 2) return node.y + node.boxH;
+  let m = node.y + node.boxH;
+  for (const ch of [node.sumario, ...node.clusters]) {
+    m = Math.max(m, getMaxDepthBottom(ch));
+  }
+  return m;
+}
+
+let lastUnscaledTreeWidth = 680;
+let lastUnscaledTreeHeight = 310;
+
+function applyCanvasZoom(scale) {
+  currentZoom = Math.max(0.26, Math.min(1.5, scale));
+  $('#zoom-lbl').textContent = `${Math.round(currentZoom * 100)}%`;
+  const canvas = $('#tree-canvas');
+  const wrapper = $('#tree-scale-wrapper');
+  canvas.style.transform = `scale(${currentZoom})`;
+  wrapper.style.width = `${Math.ceil(lastUnscaledTreeWidth * currentZoom)}px`;
+  wrapper.style.height = `${Math.ceil(lastUnscaledTreeHeight * currentZoom)}px`;
+  requestAnimationFrame(positionFloatingBalloon);
+}
+
+function fitTreeToViewport() {
+  const vp = $('#tree-viewport');
+  const availW = vp.clientWidth - 40;
+  if (availW <= 0 || lastUnscaledTreeWidth <= 0) return;
+  const ideal = Math.min(1, availW / lastUnscaledTreeWidth);
+  applyCanvasZoom(ideal);
+}
+
+function renderTreeDiagram() {
+  const activeStep = (currentStepIdx >= 0 && currentStepIdx < flatSteps.length) ? flatSteps[currentStepIdx] : null;
+  const treeToDraw = activeStep ? activeStep.snapshot : rootTree;
+  if (!treeToDraw) return;
+
+  computeTreeLayout(treeToDraw);
+  const totalWidth = Math.max(treeToDraw.subtreeW + 40, 680);
+  assignCoordinates(treeToDraw, 20, 22);
+  const totalHeight = getMaxDepthBottom(treeToDraw) + 24;
+
+  lastUnscaledTreeWidth = totalWidth;
+  lastUnscaledTreeHeight = totalHeight;
+
+  const canvas = $('#tree-canvas');
+  canvas.style.width = `${totalWidth}px`;
+  canvas.style.height = `${totalHeight}px`;
+  applyCanvasZoom(currentZoom);
+
+  const nodesLayer = $('#tree-nodes-layer');
+  const svgLayer = $('#tree-svg');
+  svgLayer.setAttribute('viewBox', `0 0 ${totalWidth} ${totalHeight}`);
+  svgLayer.setAttribute('width', totalWidth);
+  svgLayer.setAttribute('height', totalHeight);
+
+  const ancestorIds = activeStep ? getAncestorIds(treeToDraw, activeStep.nodeId) : new Set();
+
+  let nodesHTML = '';
+  let edgesHTML = '';
+
+  function walkRender(node) {
+    const isFilled = node.min !== -1;
+    const isActive = activeStep && activeStep.nodeId === node.id;
+    const isAncestor = ancestorIds.has(node.id);
+    const stateCls = [
+      'veb-node',
+      node.u <= 2 ? 'leaf-node' : 'internal-node',
+      isFilled ? 'node-filled' : 'node-empty',
+      isAncestor ? 'node-ancestor' : '',
+      isActive ? 'node-active' : ''
+    ].filter(Boolean).join(' ');
+
+    let ptrRowHTML = '';
+    if (node.u > 2) {
+      const up = upperSqrt(node.u);
+      const cols = up + 1;
+      const sumPop = node.sumario && node.sumario.min !== -1;
+      const sumAct = isActive && activeStep.activeSlot === 'S';
+
+      let cells = `<div class="ptr-cell ptr-summary ${sumPop ? 'ptr-populated' : ''} ${sumAct ? 'ptr-active' : ''}" title="Sumário V.summary (U=${up})">
+        <span>S</span><span class="ptr-dot"></span>
+      </div>`;
+
+      for (let i = 0; i < up; i++) {
+        const clPop = node.clusters[i] && node.clusters[i].min !== -1;
+        const clAct = isActive && activeStep.activeSlot === i;
+        cells += `<div class="ptr-cell ${clPop ? 'ptr-populated' : ''} ${clAct ? 'ptr-active' : ''}" title="Cluster [${i}] (U=${lowerSqrt(node.u)})">
+          <span>${i}</span><span class="ptr-dot"></span>
+        </div>`;
+      }
+      ptrRowHTML = `<div class="node-ptr-row" style="grid-template-columns:repeat(${cols}, 1fr)">${cells}</div>`;
+
+      const colW = node.boxW / cols;
+      const children = [node.sumario, ...node.clusters];
+      children.forEach((ch, idx) => {
+        const startX = node.x + colW * idx + colW / 2;
+        const startY = node.y + node.boxH - 4;
+        const endX = ch.x + ch.boxW / 2;
+        const endY = ch.y;
+        const midY = (startY + endY) / 2;
+
+        const isEdgeActive =
+          (isActive && ((idx === 0 && activeStep.activeSlot === 'S') || (idx > 0 && activeStep.activeSlot === idx - 1))) ||
+          (activeStep && activeStep.nodeId === ch.id) ||
+          (ancestorIds.has(ch.id));
+        const isEdgePopulated = ch.min !== -1;
+        const edgeCls = [
+          'svg-edge',
+          idx === 0 ? 'edge-summary' : 'edge-cluster',
+          isEdgePopulated ? 'edge-populated' : '',
+          isEdgeActive ? 'edge-active' : ''
+        ].filter(Boolean).join(' ');
+
+        edgesHTML += `<path class="${edgeCls}" d="M ${startX.toFixed(1)} ${startY.toFixed(1)} C ${startX.toFixed(1)} ${midY.toFixed(1)}, ${endX.toFixed(1)} ${midY.toFixed(1)}, ${endX.toFixed(1)} ${endY.toFixed(1)}" />`;
+      });
+    }
+
+    nodesHTML += `<div class="${stateCls}" data-node-id="${node.id}" style="left:${Math.round(node.x)}px;top:${Math.round(node.y)}px;width:${node.boxW}px;height:${node.boxH}px">
+      <div class="node-role-tag">${esc(node.role)}</div>
+      <div class="node-top-row">
+        <div class="node-attr-cell"><span class="attr-lbl">U</span><span class="attr-val">${node.u}</span></div>
+        <div class="node-attr-cell"><span class="attr-lbl">min</span><span class="attr-val val-minmax">${node.min}</span></div>
+        <div class="node-attr-cell"><span class="attr-lbl">max</span><span class="attr-val val-minmax">${node.max}</span></div>
+      </div>
+      ${ptrRowHTML}
+    </div>`;
+
+    if (node.u > 2) {
+      walkRender(node.sumario);
+      node.clusters.forEach(walkRender);
+    }
+  }
+
+  walkRender(treeToDraw);
+  svgLayer.innerHTML = edgesHTML;
+  nodesLayer.innerHTML = nodesHTML;
+
+  nodesLayer.querySelectorAll('.veb-node').forEach(el => {
+    el.onclick = e => {
+      e.stopPropagation();
+      inspectNodeDirectly(Number(el.dataset.nodeId), treeToDraw);
+    };
+  });
+
+  const present = Array.from(getPresentElements(treeToDraw)).sort((a, b) => a - b);
+  const upRoot = upperSqrt(treeToDraw.u);
+  const loRoot = lowerSqrt(treeToDraw.u);
+  $('#canonical-root-summary').textContent =
+    `Raiz U=${treeToDraw.u} (Sumário U=${upRoot} | ${upRoot} Clusters U=${loRoot}) · Conjunto: {${present.join(', ')}}`;
+
+  renderUniverseStrip(treeToDraw, activeStep ? activeStep.queriedKey : null);
+  updateStepControlsUI();
+  requestAnimationFrame(positionFloatingBalloon);
+}
+
+// Inspeção direta de um nó ao clicar nele
+function inspectNodeDirectly(nodeId, treeState) {
+  const node = findNodeById(treeState, nodeId);
+  if (!node) return;
+  balloonHiddenManually = false;
+
+  document.querySelectorAll('.veb-node').forEach(el => {
+    el.classList.toggle('node-active', Number(el.dataset.nodeId) === nodeId);
+  });
+
+  const up = upperSqrt(node.u);
+  const lo = lowerSqrt(node.u);
+
+  $('#fb-tag').textContent = 'ESTRUTURA DO NÓ';
+  $('#fb-path').textContent = `${node.path} (U=${node.u})`;
+  $('#fb-title').textContent = node.min === -1
+    ? `Nó ${node.role} vazio (min = -1, max = -1)`
+    : `Nó ${node.role} populado: min = ${node.min}, max = ${node.max}`;
+  $('#fb-desc').textContent = node.u > 2
+    ? `Divide U=${node.u} em √↑${node.u} = ${up} clusters de tamanho √↓${node.u} = ${lo}, monitorados por 1 Sumário (S) de tamanho U=${up}.`
+    : `Nó folha de caso base CLRS (U = 2). Armazena diretamente chaves {0, 1} em min e max.`;
+
+  const fEl = $('#fb-formula');
+  if (node.u > 2) {
+    fEl.style.display = 'block';
+    fEl.textContent = `high(x) = ⌊x / ${lo}⌋  │  low(x) = x mod ${lo}`;
+  } else {
+    fEl.style.display = 'none';
+  }
+
+  const dEl = $('#fb-delta');
+  dEl.style.display = 'block';
+  dEl.textContent = `U = ${node.u}  |  min = ${node.min}  |  max = ${node.max}`;
+
+  const fb = $('#floating-balloon');
+  fb.classList.add('visible');
+  positionBalloonNextToElement(document.querySelector(`.veb-node[data-node-id="${nodeId}"]`));
+}
+
+function positionFloatingBalloon() {
+  const fb = $('#floating-balloon');
+  const activeStep = (currentStepIdx >= 0 && currentStepIdx < flatSteps.length) ? flatSteps[currentStepIdx] : null;
+
+  if (!activeStep || !$('#chk-balloon').checked || balloonHiddenManually) {
+    fb.classList.remove('visible');
+    return;
+  }
+
+  const targetEl = document.querySelector(`.veb-node[data-node-id="${activeStep.nodeId}"]`);
+  if (!targetEl) {
+    fb.classList.remove('visible');
+    return;
+  }
+
+  $('#fb-tag').textContent = `${activeStep.tag} · ${currentStepIdx + 1}/${flatSteps.length}`;
+  $('#fb-path').textContent = `${activeStep.nodePath} (U=${activeStep.nodeU})`;
+  $('#fb-title').textContent = activeStep.title;
+  $('#fb-desc').textContent = activeStep.text;
+
+  const fEl = $('#fb-formula');
+  if (activeStep.formula) {
+    fEl.style.display = 'block';
+    fEl.textContent = activeStep.formula;
+  } else {
+    fEl.style.display = 'none';
+  }
+
+  const dEl = $('#fb-delta');
+  if (activeStep.delta) {
+    dEl.style.display = 'block';
+    dEl.textContent = activeStep.delta;
+  } else {
+    dEl.style.display = 'none';
+  }
+
+  fb.classList.add('visible');
+  positionBalloonNextToElement(targetEl);
+}
+
+function positionBalloonNextToElement(targetEl) {
+  if (!targetEl) return;
+  const fb = $('#floating-balloon');
+  const rect = targetEl.getBoundingClientRect();
+  const fbRect = fb.getBoundingClientRect();
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const margin = 12;
+
+  let pos = 'bottom';
+  let top = rect.bottom + 10;
+  if (top + fbRect.height > vh - margin && rect.top - fbRect.height - 10 > 80) {
+    pos = 'top';
+    top = rect.top - fbRect.height - 10;
+  } else {
+    top = Math.max(85, Math.min(top, vh - fbRect.height - margin));
+  }
+
+  const centerX = rect.left + rect.width / 2;
+  let left = centerX - fbRect.width / 2;
+  left = Math.max(margin, Math.min(left, vw - fbRect.width - margin));
+
+  fb.dataset.pos = pos;
+  fb.style.top = `${Math.round(top)}px`;
+  fb.style.left = `${Math.round(left)}px`;
+
+  const arrow = $('#balloon-arrow');
+  const arrowLeft = Math.max(16, Math.min(centerX - left - 5, fbRect.width - 24));
+  arrow.style.left = `${Math.round(arrowLeft)}px`;
+}
+
+// Renderiza a Régua de Construção Rápida (1 clique insere ou remove/reconstrói)
+function renderUniverseStrip(treeState, queriedKey) {
+  $('#univ-range-lbl').textContent = `[0..${treeState.u - 1}]`;
+  const present = getPresentElements(treeState);
+  let html = '';
+  for (let i = 0; i < treeState.u; i++) {
+    const isPres = present.has(i);
+    const isQry = queriedKey === i;
+    html += `<div class="u-cell ${isPres ? 'present' : ''} ${isQry ? 'queried' : ''}" data-key="${i}" title="${isPres ? `Chave ${i} presente (clique para remover da construção)` : `Clique para inserir a chave ${i} na árvore`}">${i}</div>`;
+  }
+  const strip = $('#univ-strip');
+  strip.innerHTML = html;
+  strip.querySelectorAll('.u-cell').forEach(cell => {
+    cell.onclick = () => {
+      const k = Number(cell.dataset.key);
+      $('#inp-ins').value = k;
+      if (present.has(k)) {
+        rebuildWithoutKey(k);
+      } else {
+        insertKeyAnimated(k);
+      }
+    };
+  });
+}
+
+function setBannerMessage(msg, isWarning = false, isHTML = false) {
+  const banner = $('#status-banner');
+  banner.classList.toggle('status-warn', isWarning);
+  if (isHTML) banner.innerHTML = msg;
+  else banner.textContent = msg;
+}
+
+function updateStepControlsUI() {
+  const total = flatSteps.length;
+  const activeStep = (currentStepIdx >= 0 && currentStepIdx < total) ? flatSteps[currentStepIdx] : null;
+
+  const badge = $('#step-counter-badge');
+  badge.textContent = total ? `Passo ${currentStepIdx + 1}/${total}` : 'Passo 0/0';
+  badge.classList.toggle('active', !!activeStep);
+
+  $('#btn-first').disabled = $('#btn-prev').disabled = (currentStepIdx <= 0);
+  $('#btn-next').disabled = $('#btn-last').disabled = (currentStepIdx >= total - 1);
+  $('#btn-play').textContent = playTimer ? '⏸' : '⏯ Auto';
+
+  if (activeStep) {
+    setBannerMessage(`<b>${esc(activeStep.opTitle)}:</b> ${esc(activeStep.title)}`, false, true);
+  }
+}
+
+function goToStep(idx) {
+  if (!flatSteps.length) return;
+  currentStepIdx = Math.max(0, Math.min(idx, flatSteps.length - 1));
+  renderTreeDiagram();
+
+  const activeNodeEl = document.querySelector('.veb-node.node-active');
+  if (activeNodeEl) {
+    activeNodeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
+
+function startAutoPlayFrom(startIdx) {
+  stopAutoPlay();
+  balloonHiddenManually = false;
+  goToStep(startIdx);
+  playTimer = setInterval(() => {
+    if (currentStepIdx < flatSteps.length - 1) {
+      goToStep(currentStepIdx + 1);
+    } else {
+      stopAutoPlay();
+      updateStepControlsUI();
+    }
+  }, 750);
+  updateStepControlsUI();
+}
+
+function stopAutoPlay() {
+  if (playTimer) {
+    clearInterval(playTimer);
+    playTimer = null;
+  }
+}
+
+/* ==========================================================================
+   4. CONTROLADORES DE CONSTRUÇÃO E PRESETS CANÔNICOS
+   ========================================================================== */
+function initNewTree(u) {
+  stopAutoPlay();
+  universeSize = u;
+  nextNodeId = 1;
+  rootTree = buildFullVebTree(u);
+  insertedKeysOrder = [];
+  flatSteps = [];
+  currentStepIdx = -1;
+  $('#inp-ins').max = u - 1;
+  $('#inp-op').max = u - 1;
+  currentZoom = 1;
+  renderTreeDiagram();
+  if (u >= 16) {
+    requestAnimationFrame(fitTreeToViewport);
+  }
+}
+
+function insertKeyAnimated(x) {
+  stopAutoPlay();
+  if (!insertedKeysOrder.includes(x)) {
+    insertedKeysOrder.push(x);
+  }
+  const startIdx = flatSteps.length;
+  opInserir(rootTree, x, `Inserir(${x})`, x);
+  startAutoPlayFrom(startIdx);
+}
+
+function rebuildWithoutKey(keyToRemove) {
+  stopAutoPlay();
+  insertedKeysOrder = insertedKeysOrder.filter(k => k !== keyToRemove);
+  nextNodeId = 1;
+  rootTree = buildFullVebTree(universeSize);
+  flatSteps = [];
+  insertedKeysOrder.forEach(k => {
+    opInserir(rootTree, k, `Inserir(${k})`, k);
+  });
+  currentStepIdx = flatSteps.length - 1;
+  balloonHiddenManually = true;
+  renderTreeDiagram();
+  setBannerMessage(`Chave ${keyToRemove} removida. Árvore reconstruída com {${insertedKeysOrder.join(', ')}}.`);
+}
+
+function loadPresetConstruction(u, keys) {
+  $('#inp-u').value = String(u);
+  initNewTree(u);
+  keys.forEach(k => {
+    insertedKeysOrder.push(k);
+    opInserir(rootTree, k, `Inserir(${k})`, k);
+  });
+  currentStepIdx = flatSteps.length - 1;
+  balloonHiddenManually = false;
+  renderTreeDiagram();
+  if (u >= 16) {
+    requestAnimationFrame(fitTreeToViewport);
+  }
+  setBannerMessage(`Árvore U=${u} construída com as chaves {${keys.join(', ')}}. Use ◀ e ▶ para rever cada etapa da construção.`);
+}
+
+
+/* ==========================================================================
+   OPERAÇÕES ADICIONAIS: BUSCA, MÍNIMO, MÁXIMO, SUCESSOR, PREDECESSOR E REMOÇÃO
+   Mantém o renderizador, snapshots, balões e navegação existentes.
+   ========================================================================== */
+function presentKeysSorted() {
+  return [...getPresentElements(rootTree)].sort((a,b)=>a-b);
+}
+function recordOperationStep(title, node, tag, text, queriedKey, delta=null, formula=null, activeSlot=null) {
+  recordStep(title, queriedKey, {node, tag, title, text, delta, formula, activeSlot});
+}
+function findTrace(V, x, opTitle) {
+  if (!V || V.min === -1) {
+    recordOperationStep(opTitle,V || rootTree,'BUSCA','O nó está vazio (min = NIL). Portanto, a chave não pode estar neste subuniverso.',x,'Resultado: FALSE');
+    return false;
+  }
+  if (x === V.min || x === V.max) {
+    recordOperationStep(opTitle,V,'BUSCA — CABEÇALHO',`A chave ${x} coincide com min ou max do nó. Na representação vEB, esses extremos ficam armazenados diretamente no cabeçalho.`,x,`min=${V.min}; max=${V.max}`);
+    return true;
+  }
+  if (V.u === 2) {
+    recordOperationStep(opTitle,V,'BUSCA — CASO BASE',`O universo tem apenas dois valores. Como ${x} não coincide com min=${V.min} nem max=${V.max}, a chave não está presente.`,x,'Resultado: FALSE');
+    return false;
+  }
+  const h=high(x,V.u), l=low(x,V.u), C=V.clusters[h];
+  recordOperationStep(opTitle,V,'BUSCA — DECOMPOSIÇÃO',`A chave não está no cabeçalho. Calculamos high(${x})=${h} e low(${x})=${l}; a busca continua no Cluster [${h}].`,x,`Consultar Cluster [${h}]`,makeFormulaText(V.u,x),h);
+  return findTrace(C,l,opTitle);
+}
+function traceExtreme(which, opTitle) {
+  const x=which==='min'?rootTree.min:rootTree.max;
+  recordOperationStep(opTitle,rootTree,which==='min'?'MÍNIMO':'MÁXIMO',
+    x===-1?'A árvore está vazia (min = max = NIL).':'A operação termina na raiz: a vEB mantém o mínimo e o máximo do conjunto diretamente no cabeçalho de cada nó.',
+    null,`${which}(S) = ${x===-1?'NIL':x}`);
+  return x;
+}
+
+// vEB-TREE-SUCCESSOR(V, x), CLRS: usa min, cluster local e summary.
+function vebSuccessorTrace(V,x,opTitle,original=x) {
+  if (!V || V.min===-1) {
+    recordOperationStep(opTitle,V||rootTree,'SUCCESSOR — VAZIO','O subuniverso está vazio; não existe sucessor neste ramo.',original,'Retorna NIL');
+    return -1;
+  }
+  if (x < V.min) {
+    recordOperationStep(opTitle,V,'SUCCESSOR — MIN',`${x} < min=${V.min}. Pela primeira condição do algoritmo, o sucessor é o mínimo deste subuniverso.`,original,`Retorna ${V.min}`);
+    return V.min;
+  }
+  if (V.u===2) {
+    const answer=(x===0 && V.max===1)?1:-1;
+    recordOperationStep(opTitle,V,'SUCCESSOR — CASO BASE',answer===1?'O universo contém {0,1} e x=0. Logo, 1 é o sucessor.':'No universo de tamanho 2, não existe elemento armazenado maior que x.',original,`Retorna ${answer===-1?'NIL':answer}`);
+    return answer;
+  }
+  const h=high(x,V.u), l=low(x,V.u), C=V.clusters[h];
+  const maxLow=C.max;
+  recordOperationStep(opTitle,V,'SUCCESSOR — CLUSTER',`Decompõe x: high(${x})=${h}, low(${x})=${l}. Verifica max do Cluster [${h}]: ${maxLow===-1?'NIL':maxLow}.`,original,`max(Cluster [${h}]) ${maxLow!==-1 && l<maxLow ? `> ${l}: procurar localmente` : `não é maior que ${l}: consultar summary`}`,makeFormulaText(V.u,x),h);
+  if (maxLow!==-1 && l<maxLow) {
+    const offset=vebSuccessorTrace(C,l,opTitle,original);
+    if(offset===-1) return -1;
+    const answer=index(h,offset,V.u);
+    recordOperationStep(opTitle,V,'SUCCESSOR — INDEX',`O sucessor local foi ${offset}. Reconstrói a chave global com index(${h}, ${offset}) = ${answer}.`,original,`Resultado: ${answer}`,null,h);
+    return answer;
+  }
+  const succCluster=vebSuccessorTrace(V.sumario,h,opTitle,original);
+  if(succCluster===-1) {
+    recordOperationStep(opTitle,V,'SUCCESSOR — FIM','O summary não possui cluster posterior não vazio. Não existe sucessor neste subuniverso.',original,'Retorna NIL');
+    return -1;
+  }
+  const offset=V.clusters[succCluster].min;
+  const answer=index(succCluster,offset,V.u);
+  recordOperationStep(opTitle,V,'SUCCESSOR — PRÓXIMO CLUSTER',`O summary indicou o próximo cluster não vazio: [${succCluster}]. Seu mínimo é ${offset}; index(${succCluster}, ${offset}) = ${answer}.`,original,`Resultado: ${answer}`,null,succCluster);
+  return answer;
+}
+
+// vEB-TREE-PREDECESSOR(V, x), CLRS: simétrico ao successor, com max e summary.
+function vebPredecessorTrace(V,x,opTitle,original=x) {
+  if (!V || V.min===-1) {
+    recordOperationStep(opTitle,V||rootTree,'PREDECESSOR — VAZIO','O subuniverso está vazio; não existe predecessor neste ramo.',original,'Retorna NIL');
+    return -1;
+  }
+  if (x > V.max) {
+    recordOperationStep(opTitle,V,'PREDECESSOR — MAX',`${x} > max=${V.max}. Pela primeira condição do algoritmo, o predecessor é o máximo deste subuniverso.`,original,`Retorna ${V.max}`);
+    return V.max;
+  }
+  if (V.u===2) {
+    const answer=(x===1 && V.min===0)?0:-1;
+    recordOperationStep(opTitle,V,'PREDECESSOR — CASO BASE',answer===0?'O universo contém {0,1} e x=1. Logo, 0 é o predecessor.':'No universo de tamanho 2, não existe elemento armazenado menor que x.',original,`Retorna ${answer===-1?'NIL':answer}`);
+    return answer;
+  }
+  const h=high(x,V.u), l=low(x,V.u), C=V.clusters[h];
+  const minLow=C.min;
+  recordOperationStep(opTitle,V,'PREDECESSOR — CLUSTER',`Decompõe x: high(${x})=${h}, low(${x})=${l}. Verifica min do Cluster [${h}]: ${minLow===-1?'NIL':minLow}.`,original,`min(Cluster [${h}]) ${minLow!==-1 && l>minLow ? ` < ${l}: procurar localmente` : `não é menor que ${l}: consultar summary`}`,makeFormulaText(V.u,x),h);
+  if (minLow!==-1 && l>minLow) {
+    const offset=vebPredecessorTrace(C,l,opTitle,original);
+    if(offset===-1) return -1;
+    const answer=index(h,offset,V.u);
+    recordOperationStep(opTitle,V,'PREDECESSOR — INDEX',`O predecessor local foi ${offset}. Reconstrói a chave global com index(${h}, ${offset}) = ${answer}.`,original,`Resultado: ${answer}`,null,h);
+    return answer;
+  }
+  const predCluster=vebPredecessorTrace(V.sumario,h,opTitle,original);
+  if(predCluster===-1) {
+    if(V.min!==-1 && x>V.min) {
+      recordOperationStep(opTitle,V,'PREDECESSOR — MIN DA RAIZ',`Não há cluster anterior. O mínimo do nó (${V.min}) é o predecessor de ${x}.`,original,`Resultado: ${V.min}`);
+      return V.min;
+    }
+    recordOperationStep(opTitle,V,'PREDECESSOR — FIM','Não há cluster anterior e o mínimo não é menor que x. Não existe predecessor.',original,'Retorna NIL');
+    return -1;
+  }
+  const offset=V.clusters[predCluster].max;
+  const answer=index(predCluster,offset,V.u);
+  recordOperationStep(opTitle,V,'PREDECESSOR — CLUSTER ANTERIOR',`O summary indicou o cluster anterior não vazio: [${predCluster}]. Seu máximo é ${offset}; index(${predCluster}, ${offset}) = ${answer}.`,original,`Resultado: ${answer}`,null,predCluster);
+  return answer;
+}
+
+// Verifica os invariantes locais e recursivos da representação vEB.
+function validateVebNode(V) {
+  if (!V) return {ok:false, errors:['Nó inexistente']};
+  const errors=[];
+  if (V.min===-1) {
+    if (V.max!==-1) errors.push(`${V.path}: min vazio, mas max=${V.max}`);
+  } else if (V.min<0 || V.min>=V.u || V.max<0 || V.max>=V.u || V.min>V.max) {
+    errors.push(`${V.path}: min/max fora do universo ou inconsistentes`);
+  }
+  if (V.u>2) {
+    const expected=[];
+    for(let i=0;i<V.clusters.length;i++) {
+      const child=V.clusters[i];
+      const childCheck=validateVebNode(child);
+      errors.push(...childCheck.errors);
+      if(child.min!==-1) expected.push(i);
+    }
+    const actual=[...getPresentElements(V.sumario)].sort((a,b)=>a-b);
+    if(JSON.stringify(actual)!==JSON.stringify(expected)) errors.push(`${V.path}: summary deveria conter {${expected.join(', ')}} e contém {${actual.join(', ')}}`);
+    const summaryCheck=validateVebNode(V.sumario);
+    errors.push(...summaryCheck.errors);
+    const represented=[];
+    if(V.min!==-1) represented.push(V.min);
+    for(let i=0;i<V.clusters.length;i++) {
+      for(const local of getPresentElements(V.clusters[i])) represented.push(index(i,local,V.u));
+    }
+    const unique=[...new Set(represented)].sort((a,b)=>a-b);
+    if(unique.length && (V.min!==unique[0] || V.max!==unique[unique.length-1])) errors.push(`${V.path}: min/max não correspondem aos extremos {${unique.join(', ')}}`);
+  } else if(V.min!==-1 && (V.min>V.max || V.max>1)) {
+    errors.push(`${V.path}: folha U=2 inválida`);
+  }
+  return {ok:errors.length===0,errors};
+}
+
+// vEB-TREE-DELETE(V, x), CLRS. As alterações são feitas na própria estrutura.
+function vebDeleteTrace(V,x,opTitle,original=x) {
+  if(V.min===V.max) {
+    const oldMin=V.min, oldMax=V.max; V.min=-1; V.max=-1;
+    recordOperationStep(opTitle,V,'DELETE — ÚLTIMO ELEMENTO',`min=max=${oldMin}. Ao remover o único elemento, o nó fica vazio.`,original,`min: ${oldMin} → NIL; max: ${oldMax} → NIL`);
+    return;
+  }
+  if(V.u===2) {
+    const removed=x; const remaining=(x===V.min?V.max:V.min);
+    V.min=remaining; V.max=remaining;
+    recordOperationStep(opTitle,V,'DELETE — UNIVERSO 2',`O nó contém dois valores. Remove ${removed} e mantém ${remaining} como mínimo e máximo.`,original,`min=max=${remaining}`);
+    return;
+  }
+  if(x===V.min) {
+    const firstCluster=V.sumario.min;
+    const firstOffset=V.clusters[firstCluster].min;
+    const promoted=index(firstCluster,firstOffset,V.u);
+    recordOperationStep(opTitle,V,'DELETE — PROMOÇÃO DO MIN',`x era o mínimo ${x}. O algoritmo promove o menor elemento dos clusters: cluster ${firstCluster}, offset ${firstOffset}; index(${firstCluster}, ${firstOffset})=${promoted}.`,original,`min: ${x} → ${promoted}`,null,firstCluster);
+    V.min=promoted;
+    x=promoted;
+  }
+  const h=high(x,V.u), l=low(x,V.u), C=V.clusters[h];
+  recordOperationStep(opTitle,V,'DELETE — DESCIDA',`Remove recursivamente low(${x})=${l} do Cluster [${h}], pois high(${x})=${h}.`,original,`Cluster [${h}], chave local ${l}`,makeFormulaText(V.u,x),h);
+  vebDeleteTrace(C,l,opTitle,original);
+  if(C.min===-1) {
+    recordOperationStep(opTitle,V,'DELETE — CLUSTER ESVAZIADO',`O Cluster [${h}] ficou vazio. Remove o índice ${h} do summary para registrar que esse cluster não contém elementos.`,original,`DELETE(summary, ${h})`,null,'S');
+    vebDeleteTrace(V.sumario,h,opTitle,original);
+    if(x===V.max) {
+      const summaryMax=V.sumario.max;
+      if(summaryMax===-1) {
+        const oldMax=V.max; V.max=V.min;
+        recordOperationStep(opTitle,V,'DELETE — ATUALIZA MAX',`O summary ficou vazio; portanto, não há elementos nos clusters. O máximo passa a ser o mínimo (${V.min}).`,original,`max: ${oldMax} → ${V.max}`);
+      } else {
+        const oldMax=V.max, newMax=index(summaryMax,V.clusters[summaryMax].max,V.u); V.max=newMax;
+        recordOperationStep(opTitle,V,'DELETE — ATUALIZA MAX',`O último cluster não vazio é [${summaryMax}]. Seu máximo local é ${V.clusters[summaryMax].max}; index resulta em ${newMax}.`,original,`max: ${oldMax} → ${newMax}`,null,summaryMax);
+      }
+    }
+  } else if(x===V.max) {
+    const oldMax=V.max, newMax=index(h,C.max,V.u); V.max=newMax;
+    recordOperationStep(opTitle,V,'DELETE — ATUALIZA MAX',`O cluster [${h}] ainda contém elementos. Seu máximo local é ${C.max}; index(${h}, ${C.max})=${newMax}.`,original,`max: ${oldMax} → ${newMax}`,null,h);
+  }
+}
+
+function executeAdditionalOperation() {
+  stopAutoPlay();
+  const op=$('#sel-op').value;
+  const x=parseInt($('#inp-op').value,10);
+  const titleMap={buscar:`Buscar(${x})`,min:'Mínimo()',max:'Máximo()',sucessor:`Sucessor(${x})`,predecessor:`Predecessor(${x})`,remover:`Remover(${x})`};
+  const title=titleMap[op];
+  if(op!=='min'&&op!=='max'&&(Number.isNaN(x)||x<0||x>=universeSize)){
+    setBannerMessage(`Digite uma chave válida entre 0 e ${universeSize-1}.`,true);return;
+  }
+  const start=flatSteps.length;
+  let result;
+  if(op==='buscar'){
+    result=findTrace(rootTree,x,title);
+    setBannerMessage(`Busca(${x}): ${result?'chave encontrada':'chave não encontrada'}. Os passos mostram a decomposição e a descida recursiva.`);
+  } else if(op==='min'||op==='max'){
+    result=traceExtreme(op,title);
+    setBannerMessage(`${op==='min'?'Mínimo':'Máximo'} da árvore: ${result===-1?'NIL':result}.`);
+  } else if(op==='sucessor'||op==='predecessor'){
+    result=op==='sucessor'?vebSuccessorTrace(rootTree,x,title):vebPredecessorTrace(rootTree,x,title);
+    setBannerMessage(`${op==='sucessor'?'Sucessor':'Predecessor'} de ${x}: ${result===-1?'NIL':result}. Resultado obtido pela recursão em clusters e summary.`);
+  } else {
+    const keysBefore=presentKeysSorted();
+    if(!keysBefore.includes(x)){
+      recordOperationStep(title,rootTree,'DELETE — CHAVE AUSENTE',`A chave ${x} não pertence ao conjunto. O algoritmo não altera a árvore.`,x,'Árvore inalterada');
+      setBannerMessage(`A chave ${x} não está na árvore; nenhuma alteração foi feita.`,true);
+    } else {
+      vebDeleteTrace(rootTree,x,title);
+      insertedKeysOrder=insertedKeysOrder.filter(k=>k!==x);
+      const audit=validateVebNode(rootTree);
+      recordOperationStep(title,rootTree,audit.ok?'INVARIANTES — OK':'INVARIANTES — FALHA',audit.ok
+        ? `A remoção terminou e a verificação estrutural foi aprovada: min/max representam os extremos, os clusters estão dentro de seus subuniversos e o summary aponta exatamente os clusters não vazios.`
+        : `A verificação encontrou inconsistências: ${audit.errors.join(' | ')}`,x,
+        audit.ok?`Invariantes preservados · conjunto {${presentKeysSorted().join(', ')}}`:`Erros: ${audit.errors.join('; ')}`);
+      setBannerMessage(audit.ok
+        ? `Chave ${x} removida pelo algoritmo recursivo. Invariantes verificados. Conjunto: {${presentKeysSorted().join(', ')}}.`
+        : `Atenção: a remoção terminou, mas a auditoria detectou: ${audit.errors.join('; ')}`,!audit.ok);
+    }
+  }
+  if(flatSteps.length>start) startAutoPlayFrom(start);
+  else {currentStepIdx=-1;renderTreeDiagram();}
+}
+$('#btn-op').onclick=executeAdditionalOperation;
+$('#inp-op').addEventListener('keydown',e=>{if(e.key==='Enter')executeAdditionalOperation();});
+$('#inp-u').addEventListener('change',()=>{$('#inp-op').max=universeSize-1;});
+
+/* ==========================================================================
+   5. EVENT LISTENERS
+   ========================================================================== */
+$('#btn-new-tree').onclick = () => {
+  const u = parseInt($('#inp-u').value, 10) || 8;
+  initNewTree(u);
+  setBannerMessage(`Árvore vazia U=${u} criada (√↑u=${upperSqrt(u)} clusters de tamanho √↓u=${lowerSqrt(u)}).`);
+};
+
+$('#inp-u').onchange = () => {
+  const u = parseInt($('#inp-u').value, 10) || 8;
+  initNewTree(u);
+  setBannerMessage(`Universo alterado para U=${u} (Sumário U=${upperSqrt(u)} e ${upperSqrt(u)} Clusters de U=${lowerSqrt(u)}).`);
+};
+
+$('#btn-ins').onclick = () => {
+  const x = parseInt($('#inp-ins').value, 10);
+  if (isNaN(x) || x < 0 || x >= universeSize) {
+    setBannerMessage(`Digite uma chave válida entre 0 e ${universeSize - 1}.`, true);
+    return;
+  }
+  insertKeyAnimated(x);
+};
+
+$('#inp-ins').addEventListener('keydown', e => {
+  if (e.key === 'Enter') $('#btn-ins').click();
+});
+
+$('#btn-preset-8').onclick = () => loadPresetConstruction(8, [2, 3, 5, 7]);
+$('#btn-preset-16').onclick = () => loadPresetConstruction(16, [2, 3, 4, 5, 7, 14, 15]);
+
+$('#btn-zoom-in').onclick = () => applyCanvasZoom(currentZoom + 0.12);
+$('#btn-zoom-out').onclick = () => applyCanvasZoom(currentZoom - 0.12);
+$('#btn-zoom-reset').onclick = () => applyCanvasZoom(1);
+$('#btn-zoom-fit').onclick = fitTreeToViewport;
+
+$('#btn-first').onclick = () => { stopAutoPlay(); balloonHiddenManually = false; goToStep(0); };
+$('#btn-prev').onclick = () => { stopAutoPlay(); balloonHiddenManually = false; goToStep(currentStepIdx - 1); };
+$('#btn-next').onclick = () => { stopAutoPlay(); balloonHiddenManually = false; goToStep(currentStepIdx + 1); };
+$('#btn-last').onclick = () => { stopAutoPlay(); balloonHiddenManually = false; goToStep(flatSteps.length - 1); };
+
+$('#btn-play').onclick = () => {
+  if (playTimer) {
+    stopAutoPlay();
+    updateStepControlsUI();
+  } else {
+    const start = currentStepIdx >= flatSteps.length - 1 ? 0 : currentStepIdx;
+    startAutoPlayFrom(start);
+  }
+};
+
+$('#fb-close').onclick = () => {
+  balloonHiddenManually = true;
+  positionFloatingBalloon();
+};
+
+$('#chk-balloon').onchange = () => {
+  balloonHiddenManually = false;
+  positionFloatingBalloon();
+};
+
+window.addEventListener('keydown', e => {
+  if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    stopAutoPlay();
+    balloonHiddenManually = false;
+    goToStep(currentStepIdx + 1);
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    stopAutoPlay();
+    balloonHiddenManually = false;
+    goToStep(currentStepIdx - 1);
+  } else if (e.key === 'Escape') {
+    balloonHiddenManually = true;
+    positionFloatingBalloon();
+  }
+});
+
+window.addEventListener('resize', () => requestAnimationFrame(positionFloatingBalloon), { passive: true });
+window.addEventListener('scroll', () => requestAnimationFrame(positionFloatingBalloon), { passive: true });
+$('#tree-viewport').addEventListener('scroll', () => requestAnimationFrame(positionFloatingBalloon), { passive: true });
+
+// Inicializa construindo o exemplo canônico U=8 {2, 3, 5, 7}
+loadPresetConstruction(8, [2, 3, 5, 7]);
+</script>
+</body>
+</html>
