@@ -1,0 +1,29 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[brazilian]{babel}
+\usepackage{geometry}
+\geometry{top=3cm, left=3cm, bottom=2cm, right=2cm}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{1.25cm}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\bfseries\normalsize}{\thechapter}{1em}{\MakeUppercase}
+\titleformat{\section}{\bfseries\normalsize}{\thesection}{1em}{}
+\titleformat{\subsection}{\bfseries\normalsize}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\itshape\normalsize}{\thesubsubsection}{1em}{}
+\titlespacing*{\chapter}{0pt}{0pt}{1.5ex plus .2ex}
+\titlespacing*{\section}{0pt}{1.5ex plus 0.5ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.5ex plus 0.5ex minus .2ex}{1.2ex plus .2ex}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\footnotesize\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\begin{document}
+\chapter{Metodologia Experimental}\label{cap:estudo_caso}
+Texto de teste da metodologia.
+\chapter{Resultados}\label{cap:resultados}
+Texto de teste dos resultados referenciando o Capitulo~\ref{cap:estudo_caso}.
+\end{document}

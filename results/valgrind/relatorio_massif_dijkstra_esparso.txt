@@ -1,0 +1,875 @@
+--------------------------------------------------------------------------------
+Command:            ./medir_memoria_valgrind dijkstra_esparso
+Massif arguments:   --pages-as-heap=yes --massif-out-file=results/valgrind/massif_dijkstra_esparso.out
+ms_print arguments: results/valgrind/massif_dijkstra_esparso.out
+--------------------------------------------------------------------------------
+
+
+    MB
+28.61^                                       #                                
+     |                                       #::::::::::::::::::::::::        
+     |                                      :#                        ::::::: 
+     |                                      :#                        :      :
+     |                                      :#                        :      :
+     |                                     :@#                        :      :
+     |                                     @@#                        :      :
+     |                                 :@::@@#                        :      :
+     |                   :::@:::::::::::@: @@#                        :      :
+     |          ::@::::::: :@:::: :::: :@: @@#                        :      :
+     |     ::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |   ::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |  @::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |::@::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |::@::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |::@::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |::@::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |::@::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |::@::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+     |::@::::@::::@:: : :: :@:::: :::: :@: @@#                        :      :
+   0 +----------------------------------------------------------------------->Gi
+     0                                                                   1.170
+
+Number of snapshots: 83
+ Detailed snapshots: [5, 15, 25, 35, 45, 53, 63, 73, 75 (peak)]
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+  0              0            8,192            8,192             0            0
+  1      4,608,043       11,640,832       11,640,832             0            0
+  2     12,753,840       11,771,904       11,771,904             0            0
+  3     23,590,713       11,972,608       11,972,608             0            0
+  4     45,004,787       12,369,920       12,369,920             0            0
+  5     45,267,117       12,369,920       12,369,920             0            0
+100.00% (12,369,920B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->89.17% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->89.17% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->48.08% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->48.08% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->48.08% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->48.08% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->47.91% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->47.91% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->47.91% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->47.91% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->47.91% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->47.91% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->47.91% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->47.91% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->47.91% (5,926,912B) 0x1: ???
+|   |       |                 ->47.91% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->47.91% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.17% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->40.30% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->40.30% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->40.30% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->40.17% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->40.17% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->40.17% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->40.17% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->40.17% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->40.17% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->40.17% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->40.17% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->40.17% (4,968,448B) 0x1: ???
+|   |     |                 ->40.17% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->40.17% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.13% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.79% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->06.42% (794,624B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->06.42% (794,624B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->06.42% (794,624B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|     ->06.42% (794,624B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|       ->06.42% (794,624B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|         ->06.42% (794,624B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->06.42% (794,624B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->06.42% (794,624B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               
+->02.65% (327,680B) 0x0: ???
+| 
+->01.75% (217,088B) 0x4CFB8AB: brk (brk.c:37)
+| ->01.75% (217,088B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->01.75% (217,088B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->01.75% (217,088B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->01.75% (217,088B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->01.09% (135,168B) 0x4C8AF26: tcache_init.part.0 (malloc.c:3252)
+|         | ->01.09% (135,168B) 0x4C8B875: tcache_init (malloc.c:3248)
+|         |   ->01.09% (135,168B) 0x4C8B875: malloc (malloc.c:3313)
+|         |     ->01.09% (135,168B) 0x490038E: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |       ->01.09% (135,168B) 0x400571E: call_init.part.0 (dl-init.c:74)
+|         |         ->01.09% (135,168B) 0x4005823: call_init (dl-init.c:120)
+|         |           ->01.09% (135,168B) 0x4005823: _dl_init (dl-init.c:121)
+|         |             ->01.09% (135,168B) 0x401F59F: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|         |               ->01.09% (135,168B) 0x1: ???
+|         |                 ->01.09% (135,168B) 0x1FFF00047A: ???
+|         |                   ->01.09% (135,168B) 0x1FFF000493: ???
+|         |                     
+|         ->00.66% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+  6     45,267,117       12,365,824       12,365,824             0            0
+  7     67,806,756       14,503,936       14,503,936             0            0
+  8     75,529,339       14,639,104       14,639,104             0            0
+  9     83,432,137       14,774,272       14,774,272             0            0
+ 10     91,538,865       14,909,440       14,909,440             0            0
+ 11     99,795,566       15,044,608       15,044,608             0            0
+ 12    108,053,065       15,179,776       15,179,776             0            0
+ 13    116,311,751       15,314,944       15,314,944             0            0
+ 14    124,569,208       15,450,112       15,450,112             0            0
+ 15    132,826,455       15,585,280       15,585,280             0            0
+100.00% (15,585,280B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->70.78% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->70.78% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->38.16% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->38.16% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->38.16% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->38.16% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->38.03% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->38.03% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->38.03% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->38.03% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->38.03% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->38.03% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->38.03% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->38.03% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->38.03% (5,926,912B) 0x1: ???
+|   |       |                 ->38.03% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->38.03% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.13% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->31.98% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->31.98% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->31.98% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->31.88% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->31.88% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->31.88% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->31.88% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->31.88% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->31.88% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->31.88% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->31.88% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->31.88% (4,968,448B) 0x1: ???
+|   |     |                 ->31.88% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->31.88% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.11% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.63% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->18.79% (2,928,640B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->18.79% (2,928,640B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->18.79% (2,928,640B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|     ->18.79% (2,928,640B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|       ->18.79% (2,928,640B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|         ->18.79% (2,928,640B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->18.79% (2,928,640B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->15.40% (2,400,256B) 0x111587: Grafo::Grafo(int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->15.40% (2,400,256B) 0x1108B5: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   ->15.40% (2,400,256B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |     
+|             ->03.39% (528,384B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               
+->08.33% (1,298,432B) 0x4CFB8AB: brk (brk.c:37)
+| ->08.33% (1,298,432B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->08.33% (1,298,432B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->08.33% (1,298,432B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->08.33% (1,298,432B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->07.46% (1,163,264B) 0x4C8B8F1: malloc (malloc.c:3328)
+|         | ->07.46% (1,163,264B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |   ->06.94% (1,081,344B) 0x1117EC: Grafo::adicionar_aresta(int, int, int, bool) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->06.94% (1,081,344B) 0x11091E: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->06.94% (1,081,344B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->00.53% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         |   
+|         ->00.87% (135,168B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->02.10% (327,680B) 0x0: ???
+| 
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+ 16    141,083,972       15,720,448       15,720,448             0            0
+ 17    149,342,353       15,855,616       15,855,616             0            0
+ 18    157,600,358       15,990,784       15,990,784             0            0
+ 19    165,857,839       16,125,952       16,125,952             0            0
+ 20    174,114,036       16,261,120       16,261,120             0            0
+ 21    182,369,864       16,396,288       16,396,288             0            0
+ 22    190,626,070       16,531,456       16,531,456             0            0
+ 23    198,882,992       16,666,624       16,666,624             0            0
+ 24    207,139,996       16,801,792       16,801,792             0            0
+ 25    215,398,839       16,936,960       16,936,960             0            0
+100.00% (16,936,960B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->65.13% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->65.13% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->35.11% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->35.11% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->35.11% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->35.11% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->34.99% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->34.99% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->34.99% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->34.99% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->34.99% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->34.99% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->34.99% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->34.99% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->34.99% (5,926,912B) 0x1: ???
+|   |       |                 ->34.99% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->34.99% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.12% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->29.43% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->29.43% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->29.43% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->29.33% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->29.33% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->29.33% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->29.33% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->29.33% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->29.33% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->29.33% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->29.33% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->29.33% (4,968,448B) 0x1: ???
+|   |     |                 ->29.33% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->29.33% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.10% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.58% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->17.29% (2,928,640B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->17.29% (2,928,640B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->17.29% (2,928,640B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|     ->17.29% (2,928,640B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|       ->17.29% (2,928,640B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|         ->17.29% (2,928,640B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->17.29% (2,928,640B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->14.17% (2,400,256B) 0x111587: Grafo::Grafo(int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->14.17% (2,400,256B) 0x1108B5: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   ->14.17% (2,400,256B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |     
+|             ->03.12% (528,384B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               
+->15.65% (2,650,112B) 0x4CFB8AB: brk (brk.c:37)
+| ->15.65% (2,650,112B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->15.65% (2,650,112B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->15.65% (2,650,112B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->15.65% (2,650,112B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->14.85% (2,514,944B) 0x4C8B8F1: malloc (malloc.c:3328)
+|         | ->14.85% (2,514,944B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |   ->14.37% (2,433,024B) 0x1117EC: Grafo::adicionar_aresta(int, int, int, bool) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->14.37% (2,433,024B) 0x11091E: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->14.37% (2,433,024B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->00.48% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         |   
+|         ->00.80% (135,168B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->01.93% (327,680B) 0x0: ???
+| 
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+ 26    223,656,464       17,072,128       17,072,128             0            0
+ 27    231,915,678       17,207,296       17,207,296             0            0
+ 28    240,173,648       17,342,464       17,342,464             0            0
+ 29    248,431,408       17,477,632       17,477,632             0            0
+ 30    256,686,438       17,612,800       17,612,800             0            0
+ 31    288,069,031       17,747,968       17,747,968             0            0
+ 32    321,632,658       17,883,136       17,883,136             0            0
+ 33    345,695,490       18,018,304       18,018,304             0            0
+ 34    367,070,125       18,153,472       18,153,472             0            0
+ 35    387,711,442       18,288,640       18,288,640             0            0
+100.00% (18,288,640B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->60.31% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->60.31% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->32.52% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->32.52% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->32.52% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->32.52% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->32.41% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->32.41% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->32.41% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->32.41% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->32.41% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->32.41% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->32.41% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->32.41% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->32.41% (5,926,912B) 0x1: ???
+|   |       |                 ->32.41% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->32.41% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.11% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->27.26% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->27.26% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->27.26% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->27.17% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->27.17% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->27.17% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->27.17% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->27.17% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->27.17% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->27.17% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->27.17% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->27.17% (4,968,448B) 0x1: ???
+|   |     |                 ->27.17% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->27.17% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.09% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.54% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->21.88% (4,001,792B) 0x4CFB8AB: brk (brk.c:37)
+| ->21.88% (4,001,792B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->21.88% (4,001,792B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->21.88% (4,001,792B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->21.88% (4,001,792B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->21.14% (3,866,624B) 0x4C8B8F1: malloc (malloc.c:3328)
+|         | ->21.14% (3,866,624B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |   ->20.69% (3,784,704B) 0x1117EC: Grafo::adicionar_aresta(int, int, int, bool) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->20.69% (3,784,704B) 0x11091E: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->20.69% (3,784,704B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->00.45% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         |   
+|         ->00.74% (135,168B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->16.01% (2,928,640B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->16.01% (2,928,640B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->16.01% (2,928,640B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|     ->16.01% (2,928,640B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|       ->16.01% (2,928,640B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|         ->16.01% (2,928,640B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->16.01% (2,928,640B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->13.12% (2,400,256B) 0x111587: Grafo::Grafo(int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->13.12% (2,400,256B) 0x1108B5: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   ->13.12% (2,400,256B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |     
+|             ->02.89% (528,384B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               
+->01.79% (327,680B) 0x0: ???
+| 
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+ 36    407,502,179       18,423,808       18,423,808             0            0
+ 37    428,935,914       18,558,976       18,558,976             0            0
+ 38    449,832,966       18,694,144       18,694,144             0            0
+ 39    469,862,437       18,829,312       18,829,312             0            0
+ 40    491,476,400       18,964,480       18,964,480             0            0
+ 41    511,944,078       19,099,648       19,099,648             0            0
+ 42    533,853,606       19,234,816       19,234,816             0            0
+ 43    555,549,446       19,369,984       19,369,984             0            0
+ 44    577,883,732       19,505,152       19,505,152             0            0
+ 45    601,005,594       19,640,320       19,640,320             0            0
+100.00% (19,640,320B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->56.16% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->56.16% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->30.28% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->30.28% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->30.28% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->30.28% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->30.18% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->30.18% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->30.18% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->30.18% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->30.18% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->30.18% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->30.18% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->30.18% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->30.18% (5,926,912B) 0x1: ???
+|   |       |                 ->30.18% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->30.18% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.10% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->25.38% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->25.38% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->25.38% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->25.30% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->25.30% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->25.30% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->25.30% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->25.30% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->25.30% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->25.30% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->25.30% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->25.30% (4,968,448B) 0x1: ???
+|   |     |                 ->25.30% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->25.30% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.08% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.50% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->27.26% (5,353,472B) 0x4CFB8AB: brk (brk.c:37)
+| ->27.26% (5,353,472B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->27.26% (5,353,472B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->27.26% (5,353,472B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->27.26% (5,353,472B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->26.57% (5,218,304B) 0x4C8B8F1: malloc (malloc.c:3328)
+|         | ->26.57% (5,218,304B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |   ->26.15% (5,136,384B) 0x1117EC: Grafo::adicionar_aresta(int, int, int, bool) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->26.15% (5,136,384B) 0x11091E: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->26.15% (5,136,384B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->00.42% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         |   
+|         ->00.69% (135,168B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->14.91% (2,928,640B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->14.91% (2,928,640B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->14.91% (2,928,640B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|     ->14.91% (2,928,640B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|       ->14.91% (2,928,640B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|         ->14.91% (2,928,640B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->14.91% (2,928,640B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->12.22% (2,400,256B) 0x111587: Grafo::Grafo(int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->12.22% (2,400,256B) 0x1108B5: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   ->12.22% (2,400,256B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |     
+|             ->02.69% (528,384B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               
+->01.67% (327,680B) 0x0: ???
+| 
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+ 46    624,117,221       19,775,488       19,775,488             0            0
+ 47    645,672,022       19,910,656       19,910,656             0            0
+ 48    656,637,703       20,312,064       20,312,064             0            0
+ 49    658,406,876       21,651,456       21,651,456             0            0
+ 50    658,945,587       21,786,624       21,786,624             0            0
+ 51    659,484,298       21,921,792       21,921,792             0            0
+ 52    660,023,009       22,056,960       22,056,960             0            0
+ 53    660,561,720       22,192,128       22,192,128             0            0
+100.00% (22,192,128B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->49.70% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->49.70% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->26.80% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->26.80% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->26.80% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->26.80% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->26.71% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->26.71% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->26.71% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->26.71% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->26.71% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->26.71% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->26.71% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->26.71% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->26.71% (5,926,912B) 0x1: ???
+|   |       |                 ->26.71% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->26.71% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.09% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->22.46% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->22.46% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->22.46% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->22.39% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->22.39% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->22.39% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->22.39% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->22.39% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->22.39% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->22.39% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->22.39% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->22.39% (4,968,448B) 0x1: ???
+|   |     |                 ->22.39% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->22.39% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.07% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.44% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->28.39% (6,299,648B) 0x4CFB8AB: brk (brk.c:37)
+| ->28.39% (6,299,648B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->28.39% (6,299,648B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->28.39% (6,299,648B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->28.39% (6,299,648B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->27.78% (6,164,480B) 0x4C8B8F1: malloc (malloc.c:3328)
+|         | ->27.78% (6,164,480B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |   ->24.36% (5,406,720B) 0x1117EC: Grafo::adicionar_aresta(int, int, int, bool) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->24.36% (5,406,720B) 0x11091E: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->24.36% (5,406,720B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->03.05% (675,840B) 0x114499: HeapFibonacci::insert(int, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->03.05% (675,840B) 0x1121E1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->03.05% (675,840B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->00.37% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         |   
+|         ->00.61% (135,168B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->20.43% (4,534,272B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->20.43% (4,534,272B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->20.43% (4,534,272B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|     ->20.43% (4,534,272B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|       ->20.43% (4,534,272B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|         ->20.43% (4,534,272B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->20.43% (4,534,272B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->10.82% (2,400,256B) 0x111587: Grafo::Grafo(int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->10.82% (2,400,256B) 0x1108B5: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   ->10.82% (2,400,256B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |     
+|             ->03.62% (802,816B) 0x1121BB: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->03.62% (802,816B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   
+|             ->02.38% (528,384B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | 
+|             ->01.81% (401,408B) 0x111FFB: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->01.81% (401,408B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   
+|             ->01.81% (401,408B) 0x1120D1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               ->01.81% (401,408B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|                 
+->01.48% (327,680B) 0x0: ???
+| 
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+ 54    661,100,431       22,327,296       22,327,296             0            0
+ 55    661,639,142       22,462,464       22,462,464             0            0
+ 56    662,177,853       22,597,632       22,597,632             0            0
+ 57    662,716,564       22,732,800       22,732,800             0            0
+ 58    663,255,275       22,867,968       22,867,968             0            0
+ 59    663,793,986       23,003,136       23,003,136             0            0
+ 60    664,332,697       23,138,304       23,138,304             0            0
+ 61    664,871,408       23,273,472       23,273,472             0            0
+ 62    665,410,119       23,408,640       23,408,640             0            0
+ 63    665,948,830       23,543,808       23,543,808             0            0
+100.00% (23,543,808B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->46.85% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->46.85% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->25.26% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->25.26% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->25.26% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->25.26% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->25.17% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->25.17% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->25.17% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->25.17% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->25.17% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->25.17% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->25.17% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->25.17% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->25.17% (5,926,912B) 0x1: ???
+|   |       |                 ->25.17% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->25.17% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.09% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->21.17% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->21.17% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->21.17% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->21.10% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->21.10% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->21.10% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->21.10% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->21.10% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->21.10% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->21.10% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->21.10% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->21.10% (4,968,448B) 0x1: ???
+|   |     |                 ->21.10% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->21.10% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.07% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.42% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->32.50% (7,651,328B) 0x4CFB8AB: brk (brk.c:37)
+| ->32.50% (7,651,328B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->32.50% (7,651,328B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->32.50% (7,651,328B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->32.50% (7,651,328B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->31.92% (7,516,160B) 0x4C8B8F1: malloc (malloc.c:3328)
+|         | ->31.92% (7,516,160B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |   ->22.96% (5,406,720B) 0x1117EC: Grafo::adicionar_aresta(int, int, int, bool) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->22.96% (5,406,720B) 0x11091E: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->22.96% (5,406,720B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->08.61% (2,027,520B) 0x114499: HeapFibonacci::insert(int, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->08.61% (2,027,520B) 0x1121E1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->08.61% (2,027,520B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->00.35% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         |   
+|         ->00.57% (135,168B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->19.26% (4,534,272B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->19.26% (4,534,272B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->19.26% (4,534,272B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|     ->19.26% (4,534,272B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|       ->19.26% (4,534,272B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|         ->19.26% (4,534,272B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->19.26% (4,534,272B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->10.19% (2,400,256B) 0x111587: Grafo::Grafo(int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->10.19% (2,400,256B) 0x1108B5: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   ->10.19% (2,400,256B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |     
+|             ->03.41% (802,816B) 0x1121BB: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->03.41% (802,816B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   
+|             ->02.24% (528,384B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | 
+|             ->01.70% (401,408B) 0x111FFB: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             | ->01.70% (401,408B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|             |   
+|             ->01.70% (401,408B) 0x1120D1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               ->01.70% (401,408B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|                 
+->01.39% (327,680B) 0x0: ???
+| 
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+ 64    666,487,541       23,678,976       23,678,976             0            0
+ 65    667,026,252       23,814,144       23,814,144             0            0
+ 66    667,564,963       23,949,312       23,949,312             0            0
+ 67    668,103,674       24,084,480       24,084,480             0            0
+ 68    668,642,385       24,219,648       24,219,648             0            0
+ 69    669,181,191       25,268,224       25,268,224             0            0
+ 70    673,359,190       26,316,800       26,316,800             0            0
+ 71    677,537,483       27,365,376       27,365,376             0            0
+ 72    681,715,776       28,413,952       28,413,952             0            0
+ 73    683,965,756       28,942,336       28,942,336             0            0
+100.00% (28,942,336B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->38.11% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->38.11% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->20.55% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->20.55% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->20.55% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->20.55% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->20.48% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->20.48% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->20.48% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->20.48% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->20.48% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->20.48% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->20.48% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->20.48% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->20.48% (5,926,912B) 0x1: ???
+|   |       |                 ->20.48% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->20.48% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.07% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->17.22% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->17.22% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->17.22% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->17.17% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->17.17% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->17.17% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->17.17% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->17.17% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->17.17% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->17.17% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->17.17% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->17.17% (4,968,448B) 0x1: ???
+|   |     |                 ->17.17% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->17.17% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.06% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.34% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->31.98% (9,256,960B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->31.98% (9,256,960B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->17.49% (5,062,656B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|   | ->17.49% (5,062,656B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|   |   ->17.49% (5,062,656B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|   |     ->17.49% (5,062,656B) 0x4C8B8F1: malloc (malloc.c:3328)
+|   |       ->17.49% (5,062,656B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|   |         ->08.29% (2,400,256B) 0x111587: Grafo::Grafo(int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | ->08.29% (2,400,256B) 0x1108B5: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |   ->08.29% (2,400,256B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |     
+|   |         ->02.77% (802,816B) 0x1121BB: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | ->02.77% (802,816B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |   
+|   |         ->01.83% (528,384B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | 
+|   |         ->01.83% (528,384B) 0x113E96: HeapFibonacci::consolidate() (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | ->01.83% (528,384B) 0x11435C: HeapFibonacci::extract_min() (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |   ->01.83% (528,384B) 0x111DF9: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |     ->01.83% (528,384B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |       
+|   |         ->01.39% (401,408B) 0x111FFB: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | ->01.39% (401,408B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |   
+|   |         ->01.39% (401,408B) 0x1120D1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |           ->01.39% (401,408B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |             
+|   ->14.49% (4,194,304B) 0x4C8834A: sysmalloc_mmap_fallback.constprop.0 (malloc.c:2508)
+|     ->14.49% (4,194,304B) 0x4C8ACB8: sysmalloc (malloc.c:2732)
+|       ->14.49% (4,194,304B) 0x4C8ACB8: _int_malloc (malloc.c:4481)
+|         ->14.49% (4,194,304B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->14.49% (4,194,304B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->14.49% (4,194,304B) 0x114499: HeapFibonacci::insert(int, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               ->14.49% (4,194,304B) 0x1121E1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|                 ->14.49% (4,194,304B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|                   
+->28.77% (8,327,168B) 0x4CFB8AB: brk (brk.c:37)
+| ->28.77% (8,327,168B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->28.77% (8,327,168B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->28.77% (8,327,168B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->28.77% (8,327,168B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->28.30% (8,192,000B) 0x4C8B8F1: malloc (malloc.c:3328)
+|         | ->28.30% (8,192,000B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |   ->18.68% (5,406,720B) 0x1117EC: Grafo::adicionar_aresta(int, int, int, bool) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->18.68% (5,406,720B) 0x11091E: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->18.68% (5,406,720B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->09.34% (2,703,360B) 0x114499: HeapFibonacci::insert(int, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->09.34% (2,703,360B) 0x1121E1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->09.34% (2,703,360B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->00.28% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         |   
+|         ->00.47% (135,168B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->01.13% (327,680B) 0x0: ???
+| 
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+ 74    684,621,762       29,995,008       29,995,008             0            0
+ 75    685,146,241       29,995,008       29,995,008             0            0
+100.00% (29,995,008B) (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+->36.77% (11,030,528B) 0x4025D2C: __mmap64 (mmap64.c:58)
+| ->36.77% (11,030,528B) 0x4025D2C: mmap (mmap64.c:46)
+|   ->19.83% (5,947,392B) 0x4007E17: _dl_map_segment (dl-map-segments.h:29)
+|   | ->19.83% (5,947,392B) 0x4007E17: _dl_map_segments (dl-map-segments.h:101)
+|   |   ->19.83% (5,947,392B) 0x4007E17: _dl_map_object_from_fd (dl-load.c:1258)
+|   |     ->19.83% (5,947,392B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |       ->19.76% (5,926,912B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |       | ->19.76% (5,926,912B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |       |   ->19.76% (5,926,912B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |       |     ->19.76% (5,926,912B) 0x402241B: dl_main (rtld.c:1965)
+|   |       |       ->19.76% (5,926,912B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |       |         ->19.76% (5,926,912B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |       |           ->19.76% (5,926,912B) 0x402075D: _dl_start (rtld.c:581)
+|   |       |             ->19.76% (5,926,912B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |       |               ->19.76% (5,926,912B) 0x1: ???
+|   |       |                 ->19.76% (5,926,912B) 0x1FFF00047A: ???
+|   |       |                   ->19.76% (5,926,912B) 0x1FFF000493: ???
+|   |       |                     
+|   |       ->00.07% (20,480B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |       
+|   ->16.62% (4,984,832B) 0x4007F78: _dl_map_segments (dl-map-segments.h:139)
+|   | ->16.62% (4,984,832B) 0x4007F78: _dl_map_object_from_fd (dl-load.c:1258)
+|   |   ->16.62% (4,984,832B) 0x4009528: _dl_map_object (dl-load.c:2268)
+|   |     ->16.56% (4,968,448B) 0x4002A2C: openaux (dl-deps.c:64)
+|   |     | ->16.56% (4,968,448B) 0x400151B: _dl_catch_exception (dl-catch.c:237)
+|   |     |   ->16.56% (4,968,448B) 0x4002E66: _dl_map_object_deps (dl-deps.c:232)
+|   |     |     ->16.56% (4,968,448B) 0x402241B: dl_main (rtld.c:1965)
+|   |     |       ->16.56% (4,968,448B) 0x401EF45: _dl_sysdep_start (dl-sysdep.c:140)
+|   |     |         ->16.56% (4,968,448B) 0x402075D: _dl_start_final (rtld.c:494)
+|   |     |           ->16.56% (4,968,448B) 0x402075D: _dl_start (rtld.c:581)
+|   |     |             ->16.56% (4,968,448B) 0x401F547: ??? (in /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+|   |     |               ->16.56% (4,968,448B) 0x1: ???
+|   |     |                 ->16.56% (4,968,448B) 0x1FFF00047A: ???
+|   |     |                   ->16.56% (4,968,448B) 0x1FFF000493: ???
+|   |     |                     
+|   |     ->00.05% (16,384B) in 1+ places, all below ms_print's threshold (01.00%)
+|   |     
+|   ->00.33% (98,304B) in 1+ places, all below ms_print's threshold (01.00%)
+|   
+->34.37% (10,309,632B) 0x4D0344C: __mmap64 (mmap64.c:58)
+| ->34.37% (10,309,632B) 0x4D0344C: mmap (mmap64.c:46)
+|   ->20.39% (6,115,328B) 0x4C889D7: sysmalloc_mmap.isra.0 (malloc.c:2421)
+|   | ->20.39% (6,115,328B) 0x4C8A59C: sysmalloc (malloc.c:2576)
+|   |   ->20.39% (6,115,328B) 0x4C8A59C: _int_malloc (malloc.c:4481)
+|   |     ->20.39% (6,115,328B) 0x4C8B8F1: malloc (malloc.c:3328)
+|   |       ->20.39% (6,115,328B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|   |         ->08.00% (2,400,256B) 0x111587: Grafo::Grafo(int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | ->08.00% (2,400,256B) 0x1108B5: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |   ->08.00% (2,400,256B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |     
+|   |         ->05.27% (1,581,056B) 0x113E96: HeapFibonacci::consolidate() (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | ->05.27% (1,581,056B) 0x11435C: HeapFibonacci::extract_min() (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |   ->05.27% (1,581,056B) 0x111DF9: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |     ->05.27% (1,581,056B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |       
+|   |         ->02.68% (802,816B) 0x1121BB: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | ->02.68% (802,816B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |   
+|   |         ->01.76% (528,384B) 0x10B256: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | 
+|   |         ->01.34% (401,408B) 0x111FFB: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         | ->01.34% (401,408B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |         |   
+|   |         ->01.34% (401,408B) 0x1120D1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |           ->01.34% (401,408B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|   |             
+|   ->13.98% (4,194,304B) 0x4C8834A: sysmalloc_mmap_fallback.constprop.0 (malloc.c:2508)
+|     ->13.98% (4,194,304B) 0x4C8ACB8: sysmalloc (malloc.c:2732)
+|       ->13.98% (4,194,304B) 0x4C8ACB8: _int_malloc (malloc.c:4481)
+|         ->13.98% (4,194,304B) 0x4C8B8F1: malloc (malloc.c:3328)
+|           ->13.98% (4,194,304B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|             ->13.98% (4,194,304B) 0x114499: HeapFibonacci::insert(int, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|               ->13.98% (4,194,304B) 0x1121E1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|                 ->13.98% (4,194,304B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|                   
+->27.76% (8,327,168B) 0x4CFB8AB: brk (brk.c:37)
+| ->27.76% (8,327,168B) 0x4D04C83: sbrk (sbrk.c:74)
+|   ->27.76% (8,327,168B) 0x4C88B05: __glibc_morecore (morecore.c:29)
+|     ->27.76% (8,327,168B) 0x4C8ACD6: sysmalloc (malloc.c:2709)
+|       ->27.76% (8,327,168B) 0x4C8ACD6: _int_malloc (malloc.c:4481)
+|         ->27.31% (8,192,000B) 0x4C8B8F1: malloc (malloc.c:3328)
+|         | ->27.31% (8,192,000B) 0x4904903: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33)
+|         |   ->18.03% (5,406,720B) 0x1117EC: Grafo::adicionar_aresta(int, int, int, bool) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->18.03% (5,406,720B) 0x11091E: lerGrafoArquivo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->18.03% (5,406,720B) 0x10BA8D: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->09.01% (2,703,360B) 0x114499: HeapFibonacci::insert(int, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   | ->09.01% (2,703,360B) 0x1121E1: dijkstra_heap_fibonacci(Grafo const&, int) (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |   ->09.01% (2,703,360B) 0x10BAA2: main (in /mnt/c/Users/igorp/OneDrive/Arquivos Antigos/Área de Trabalho/Projetos_26_2/AEDS-AdvancedStructures/medir_memoria_valgrind)
+|         |   |     
+|         |   ->00.27% (81,920B) in 1+ places, all below ms_print's threshold (01.00%)
+|         |   
+|         ->00.45% (135,168B) in 1+ places, all below ms_print's threshold (01.00%)
+|         
+->01.09% (327,680B) 0x0: ???
+| 
+->00.00% (0B) in 1+ places, all below ms_print's threshold (01.00%)
+
+--------------------------------------------------------------------------------
+  n        time(i)         total(B)   useful-heap(B) extra-heap(B)    stacks(B)
+--------------------------------------------------------------------------------
+ 76    685,146,241       29,990,912       29,990,912             0            0
+ 77    691,909,810       29,462,528       29,462,528             0            0
+ 78  1,126,074,369       28,409,856       28,409,856             0            0
+ 79  1,126,074,667       27,607,040       27,607,040             0            0
+ 80  1,126,074,751       27,205,632       27,205,632             0            0
+ 81  1,255,901,786       26,804,224       26,804,224             0            0
+ 82  1,255,902,480       24,403,968       24,403,968             0            0

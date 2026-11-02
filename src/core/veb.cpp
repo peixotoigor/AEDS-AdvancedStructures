@@ -5,6 +5,7 @@ int veb_minimum(vanEmdeBoas* V) { return V->min; }
 int veb_maximum(vanEmdeBoas* V) { return V->max; }
 
 bool veb_member(vanEmdeBoas* V, int x) {
+    if (x < 0 || x >= V->u) return false;
     if (x == V->min || x == V->max) return true;
     if (V->u == 2) return false;
     return veb_member(V->cluster[V->high(x)], V->low(x));
@@ -53,6 +54,33 @@ int veb_successor(vanEmdeBoas* V, int x) {
             if (succ_cluster == vEB_NIL) return vEB_NIL;
             int offset = veb_minimum(V->cluster[succ_cluster]);
             return V->index(succ_cluster, offset);
+        }
+    }
+}
+
+int veb_predecessor(vanEmdeBoas* V, int x) {
+    if (V->u == 2) {
+        if (x == 1 && V->min == 0) return 0;
+        return vEB_NIL;
+    } else if (V->max != vEB_NIL && x > V->max) {
+        return V->max;
+    } else {
+        int h = V->high(x);
+        int l = V->low(x);
+        int min_low = veb_minimum(V->cluster[h]);
+
+        if (min_low != vEB_NIL && l > min_low) {
+            int offset = veb_predecessor(V->cluster[h], l);
+            return V->index(h, offset);
+        } else {
+            int pred_cluster = veb_predecessor(V->summary, h);
+            if (pred_cluster == vEB_NIL) {
+                if (V->min != vEB_NIL && x > V->min) return V->min;
+                return vEB_NIL;
+            } else {
+                int offset = veb_maximum(V->cluster[pred_cluster]);
+                return V->index(pred_cluster, offset);
+            }
         }
     }
 }
