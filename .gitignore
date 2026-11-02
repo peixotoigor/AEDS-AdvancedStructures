@@ -33,3 +33,4 @@ report/*.log
 report/*.out
 report/*.toc
 report/*.synctex.gz
+medir_memoria_valgrind
