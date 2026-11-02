@@ -55,3 +55,4 @@ add_executable(medir_memoria
     src/core/dijkstra.cpp
     src/core/heap_dario.cpp
 )
+

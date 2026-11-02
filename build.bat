@@ -62,3 +62,4 @@ echo [OK] Binarios removidos.
 goto end
 
 :end
+

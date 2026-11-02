@@ -64,3 +64,4 @@ help:
 	@echo   make estudo2_c1   - Executa o benchmark do Estudo 2 Cenario 1 (vEB vs AVL vs RB)
 	@echo   make estudo2_c2   - Executa o benchmark do Estudo 2 Cenario 2 (Dijkstra)
 	@echo   make clean        - Remove os binarios compilados
+

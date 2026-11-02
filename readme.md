@@ -147,3 +147,4 @@ O relatório técnico completo, estruturado rigorosamente conforme as normas ABN
 
 - **PDF do Relatório:** [`report/relatorio_experimental.pdf`](report/relatorio_experimental.pdf)
 - **Fonte LaTeX:** [`report/relatorio_experimental.tex`](report/relatorio_experimental.tex)
+
