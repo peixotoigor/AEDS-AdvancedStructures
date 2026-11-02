@@ -1,0 +1,49 @@
+% Tabela gerada automaticamente pelo benchmark do Estudo 1
+\begin{table}[htbp]
+  \centering
+  \caption{Desempenho comparativo (média $\pm$ desvio padrão em $\mu$s) entre Heap de Fibonacci e Árvore vEB.}
+  \label{tab:resultados-estudo1}
+  \small
+  \begin{tabular}{lllrrrr}
+    \toprule
+    \textbf{Estrutura} & \textbf{Padrão} & \textbf{$n$} & \textbf{Inserção ($\mu$s)} & \textbf{Mínimo ($\mu$s)} & \textbf{Extrair Mín ($\mu$s)} & \textbf{Remover ($\mu$s)} \\
+    \midrule
+    Heap Fib. & aleatorio & 100 & $3.2 \pm 0.5$ & $0.2 \pm 0.0$ & $52.2 \pm 4.6$ & $28.9 \pm 3.2$ \\
+    Heap Fib. & aleatorio & 1000 & $50.1 \pm 12.4$ & $3.8 \pm 0.9$ & $1119.9 \pm 218.4$ & $582.2 \pm 139.3$ \\
+    Heap Fib. & aleatorio & 10000 & $366.5 \pm 29.2$ & $27.3 \pm 3.9$ & $10285.9 \pm 212.2$ & $4810.1 \pm 303.6$ \\
+    Heap Fib. & aleatorio & 100000 & $3442.3 \pm 434.1$ & $216.5 \pm 32.4$ & $106358.0 \pm 6252.8$ & $40912.5 \pm 1418.9$ \\
+    Heap Fib. & aleatorio & 1000000 & $38059.6 \pm 4697.6$ & $2409.4 \pm 313.4$ & $2145750.0 \pm 331741.0$ & $597894.0 \pm 236050.0$ \\
+    \midrule
+    Heap Fib. & cresce & 100 & $3.3 \pm 0.2$ & $0.2 \pm 0.0$ & $44.2 \pm 1.6$ & $45.1 \pm 2.1$ \\
+    Heap Fib. & cresce & 1000 & $29.6 \pm 1.7$ & $2.4 \pm 0.2$ & $538.5 \pm 29.6$ & $549.4 \pm 35.9$ \\
+    Heap Fib. & cresce & 10000 & $347.7 \pm 75.0$ & $23.1 \pm 4.5$ & $6904.3 \pm 1521.5$ & $6688.8 \pm 1173.9$ \\
+    Heap Fib. & cresce & 100000 & $3414.2 \pm 129.3$ & $202.9 \pm 17.2$ & $72374.9 \pm 14081.1$ & $70019.1 \pm 5975.7$ \\
+    Heap Fib. & cresce & 1000000 & $40200.0 \pm 8967.3$ & $2412.2 \pm 437.4$ & $711435.0 \pm 44570.0$ & $721720.0 \pm 31130.4$ \\
+    \midrule
+    Heap Fib. & decresce & 100 & $7.6 \pm 0.2$ & $0.3 \pm 0.1$ & $102.8 \pm 2.2$ & $53.4 \pm 1.1$ \\
+    Heap Fib. & decresce & 1000 & $74.2 \pm 5.6$ & $2.3 \pm 0.2$ & $1259.8 \pm 78.6$ & $659.2 \pm 149.7$ \\
+    Heap Fib. & decresce & 10000 & $313.6 \pm 63.9$ & $23.1 \pm 5.7$ & $6048.7 \pm 772.2$ & $3052.2 \pm 666.5$ \\
+    Heap Fib. & decresce & 100000 & $3635.5 \pm 496.0$ & $221.9 \pm 41.4$ & $70774.5 \pm 9627.1$ & $34196.5 \pm 4927.0$ \\
+    Heap Fib. & decresce & 1000000 & $42422.3 \pm 8109.5$ & $4137.6 \pm 5284.2$ & $832003.0 \pm 104634.0$ & $508825.0 \pm 271927.0$ \\
+    \midrule
+    vEB & aleatorio & 100 & $19.1 \pm 3.1$ & $0.3 \pm 0.1$ & $11.5 \pm 11.4$ & $7.8 \pm 1.1$ \\
+    vEB & aleatorio & 1000 & $182.9 \pm 8.6$ & $3.0 \pm 0.4$ & $95.0 \pm 12.5$ & $93.1 \pm 4.3$ \\
+    vEB & aleatorio & 10000 & $2661.1 \pm 372.3$ & $32.0 \pm 7.3$ & $2025.5 \pm 329.9$ & $2684.6 \pm 365.6$ \\
+    vEB & aleatorio & 100000 & $35274.9 \pm 1741.7$ & $320.1 \pm 84.8$ & $18203.1 \pm 2509.5$ & $57439.9 \pm 7934.9$ \\
+    vEB & aleatorio & 1000000 & $623347.0 \pm 67389.8$ & $3535.0 \pm 774.6$ & $64330.4 \pm 13820.3$ & $768367.0 \pm 70298.3$ \\
+    \midrule
+    vEB & cresce & 100 & $8.9 \pm 1.8$ & $0.3 \pm 0.1$ & $6.0 \pm 0.9$ & $6.7 \pm 2.8$ \\
+    vEB & cresce & 1000 & $53.8 \pm 15.5$ & $2.9 \pm 0.5$ & $51.1 \pm 16.2$ & $52.9 \pm 22.7$ \\
+    vEB & cresce & 10000 & $437.3 \pm 121.3$ & $27.9 \pm 8.8$ & $416.6 \pm 19.0$ & $472.3 \pm 143.8$ \\
+    vEB & cresce & 100000 & $3978.1 \pm 421.4$ & $248.0 \pm 28.3$ & $6432.8 \pm 1373.1$ & $5656.8 \pm 771.1$ \\
+    vEB & cresce & 1000000 & $64174.7 \pm 33605.4$ & $2603.9 \pm 463.4$ & $113954.0 \pm 47948.2$ & $89435.7 \pm 43597.9$ \\
+    \midrule
+    vEB & decresce & 100 & $13.4 \pm 1.4$ & $0.2 \pm 0.0$ & $9.7 \pm 0.8$ & $6.8 \pm 0.4$ \\
+    vEB & decresce & 1000 & $48.3 \pm 9.5$ & $2.7 \pm 1.0$ & $49.9 \pm 17.9$ & $34.3 \pm 11.3$ \\
+    vEB & decresce & 10000 & $410.3 \pm 96.1$ & $25.9 \pm 6.6$ & $455.0 \pm 48.6$ & $337.1 \pm 103.0$ \\
+    vEB & decresce & 100000 & $3789.9 \pm 437.3$ & $249.8 \pm 51.1$ & $5217.4 \pm 866.6$ & $3898.9 \pm 465.1$ \\
+    vEB & decresce & 1000000 & $37206.1 \pm 1529.1$ & $2375.8 \pm 302.0$ & $53241.1 \pm 3154.9$ & $39355.6 \pm 2924.9$ \\
+    \midrule
+    \bottomrule
+  \end{tabular}
+\end{table}

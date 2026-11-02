@@ -26,4 +26,10 @@ executar_experimentos
 experimento
 gerar_dados
 testar_dijkstra
-/report
+
+# LaTeX temporários
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.synctex.gz

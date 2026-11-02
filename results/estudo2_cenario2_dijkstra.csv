@@ -1,0 +1,9 @@
+tipo_grafo,num_vertices,num_arestas,fila_prioridade,d,tempo_medio_ms,desvio_padrao_ms,memoria_kb
+esparso,100000,300000,Heap Binario (d=2),2,50.8456,8.00963,14880
+esparso,100000,300000,Heap 4-ario (d=4),4,56.7662,10.43,14940
+esparso,100000,300000,Heap 8-ario (d=8),8,65.5533,8.43231,14940
+esparso,100000,300000,Heap de Fibonacci,0,471.366,131.426,15160
+denso,5000,4999000,Heap Binario (d=2),2,68.9274,4.75218,59236
+denso,5000,4999000,Heap 4-ario (d=4),4,73.8312,9.588,59236
+denso,5000,4999000,Heap 8-ario (d=8),8,88.5254,33.9532,59236
+denso,5000,4999000,Heap de Fibonacci,0,103.091,36.9806,59488

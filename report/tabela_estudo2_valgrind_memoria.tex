@@ -1,0 +1,19 @@
+% Tabela gerada a partir das medicoes do Valgrind 3.22 Massif
+\begin{table}[htbp]
+  \centering
+  \caption{Pico de memória dinâmica alocada no heap aferido com Valgrind Massif.}
+  \label{tab:valgrind-massif}
+  \begin{tabular}{llr}
+    \toprule
+    \textbf{Estrutura / Algoritmo} & \textbf{Parâmetro de Carga} & \textbf{Pico Massif (MB)} \\
+    \midrule
+    Árvore van Emde Boas & $U = 1.048.576, N = 100.000$ & 112,28 \\
+    Árvore AVL & $N = 100.000$ & 14,51 \\
+    Árvore Rubro-Negra & $N = 100.000$ & 16,05 \\
+    Heap de Fibonacci & $N = 100.000$ & 17,60 \\
+    Heap Binário ($d=2$) & $N = 100.000$ & 19,61 \\
+    Dijkstra (Grafo Esparso) & $|V|=100.000, |E|=300.000$ & 28,61 \\
+    Dijkstra (Grafo Denso) & $|V|=5.000, |E|=4.999.000$ & 66,28 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

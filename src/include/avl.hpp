@@ -64,7 +64,13 @@ private:
 
     AVLNode* getMinValueNode(AVLNode* node) {
         AVLNode* current = node;
-        while (current->left) current = current->left;
+        while (current && current->left) current = current->left;
+        return current;
+    }
+
+    AVLNode* getMaxValueNode(AVLNode* node) {
+        AVLNode* current = node;
+        while (current && current->right) current = current->right;
         return current;
     }
 
@@ -122,6 +128,20 @@ public:
         return false;
     }
 
+    int minimum() const {
+        if (!root) return vEB_NIL;
+        AVLNode* curr = root;
+        while (curr->left) curr = curr->left;
+        return curr->key;
+    }
+
+    int maximum() const {
+        if (!root) return vEB_NIL;
+        AVLNode* curr = root;
+        while (curr->right) curr = curr->right;
+        return curr->key;
+    }
+
     int successor(int x) const {
         AVLNode* curr = root;
         AVLNode* succ = nullptr;
@@ -134,6 +154,20 @@ public:
             }
         }
         return succ ? succ->key : vEB_NIL;
+    }
+
+    int predecessor(int x) const {
+        AVLNode* curr = root;
+        AVLNode* pred = nullptr;
+        while (curr) {
+            if (curr->key < x) {
+                pred = curr;
+                curr = curr->right;
+            } else {
+                curr = curr->left;
+            }
+        }
+        return pred ? pred->key : vEB_NIL;
     }
 };
 
