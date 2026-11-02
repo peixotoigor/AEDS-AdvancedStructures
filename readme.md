@@ -140,11 +140,3 @@ g++ -O3 -std=c++20 -I src/include src/benchmark_estudo2_cenario2.cpp src/core/di
 ```
 
 ---
-
-## 📄 Relatório Experimental
-
-O relatório técnico completo, estruturado rigorosamente conforme as normas ABNT e focado na análise assintótica e empírica dos resultados com intervalos de confiança e desvios padrão, encontra-se disponível em:
-
-- **PDF do Relatório:** [`report/relatorio_experimental.pdf`](report/relatorio_experimental.pdf)
-- **Fonte LaTeX:** [`report/relatorio_experimental.tex`](report/relatorio_experimental.tex)
-
