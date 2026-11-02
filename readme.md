@@ -62,11 +62,11 @@ build.bat all
 ### Opção 2: Via Makefile (Linux)
 
 ```bash
-# Executar testes unitários de corretude
-make test
-
 # Compilar todos os executáveis
 make all
+
+# Executar testes unitários de corretude
+make test
 
 # Executar os benchmarks individualmente
 make estudo1       # Filas de Prioridade (Fibonacci vs vEB)

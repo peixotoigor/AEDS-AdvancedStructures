@@ -15,10 +15,10 @@ void testar_fibonacci() {
     HeapFibonacci heap;
     assert(heap.esta_vazio());
 
-    auto n1 = heap.insert(10, 1);
-    auto n2 = heap.insert(5, 2);
+    heap.insert(10, 1);
+    heap.insert(5, 2);
     auto n3 = heap.insert(20, 3);
-    auto n4 = heap.insert(2, 4);
+    heap.insert(2, 4);
 
     assert(!heap.esta_vazio());
     assert(heap.tamanho_heap() == 4);
